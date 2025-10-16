@@ -10,13 +10,12 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "production": "webpack --mode production --config webpack.config.cjs",
-    "prod":       "webpack --mode production --config webpack.config.cjs",
-    "development":"webpack --mode development --config webpack.config.cjs",
-    "watch":      "webpack --mode development --watch --config webpack.config.cjs",
-    "serve":      "http-server public -p 8000 -c-1",
+    "prod": "webpack --mode production --config webpack.config.cjs",
+    "development": "webpack --mode development --config webpack.config.cjs",
+    "watch": "webpack --mode development --watch --config webpack.config.cjs",
+    "serve": "http-server public -p 8000 -c-1",
     "start": "concurrently \"npm run watch\" \"npm run serve\""
-  }
-,
+  },
   "author": "Salla",
   "dependencies": {
     "@babel/runtime": "^7.26.10",
@@ -43,6 +42,7 @@
     "css-loader": "^6.5.0",
     "css-minimizer-webpack-plugin": "^7.0.2",
     "glob": "^11.0.3",
+    "http-server": "^14.1.1",
     "mini-css-extract-plugin": "^2.4.3",
     "postcss": "^8.5.6",
     "postcss-import": "^16.1.1",
