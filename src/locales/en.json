@@ -5,6 +5,10 @@
     },
     "appBanner": {
       "download_now": "download now"
+    },
+    "home": {
+      "latest_products": "Latest Products",
+      "display_all": "View all"
     }
   },
   "pages": {
