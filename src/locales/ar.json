@@ -4,7 +4,11 @@
       "cart": "السلة"
     },
     "appBanner": {
-      "download_now": "حمله الان"
+      "download_now": "حمّل الآن"
+    },
+    "home": {
+      "latest_products": "أحدث المنتجات لدينا",
+      "display_all": "عرض الكل"
     }
   },
   "pages": {
