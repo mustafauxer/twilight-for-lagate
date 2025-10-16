@@ -8,14 +8,15 @@
     "url": "git+https://github.com/SallaApp/theme-raed.git"
   },
   "scripts": {
-  "preinstall": "npx only-allow pnpm",
-  "production": "webpack --mode production",
-  "prod": "webpack --mode production",
-  "development": "webpack --mode development",
-  "watch": "webpack --mode development --watch",
-  "serve": "http-server public -p 8000 -c-1",
-  "start": "npm run watch & npm run serve"
-  },
+    "preinstall": "npx only-allow pnpm",
+    "production": "webpack --mode production --config webpack.config.cjs",
+    "prod":       "webpack --mode production --config webpack.config.cjs",
+    "development":"webpack --mode development --config webpack.config.cjs",
+    "watch":      "webpack --mode development --watch --config webpack.config.cjs",
+    "serve":      "http-server public -p 8000 -c-1",
+    "start": "concurrently \"npm run watch\" \"npm run serve\""
+  }
+,
   "author": "Salla",
   "dependencies": {
     "@babel/runtime": "^7.26.10",

@@ -89,3 +89,41 @@ class Product extends BasePage {
 }
 
 Product.initiateWhenReady(['product.single']);
+
+
+
+
+
+
+
+
+
+// Accordion: toggle panels on click (accessible)
+document.addEventListener('DOMContentLoaded', () => {
+  const accRoot = document.querySelector('[data-accordion]');
+  if (!accRoot) return;
+
+  accRoot.querySelectorAll('.acc-header').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      const panelId = btn.getAttribute('aria-controls');
+      const panel = document.getElementById(panelId);
+
+      // فتح/غلق مستقل (مش single-open)
+      btn.setAttribute('aria-expanded', String(!expanded));
+      if (panel) panel.hidden = expanded;
+
+      // لو حابة "واحد فقط مفتوح في نفس الوقت" شغّلي السطور التالية:
+      // if (!expanded) {
+      //   accRoot.querySelectorAll('.acc-header').forEach(other => {
+      //     if (other !== btn) {
+      //       other.setAttribute('aria-expanded', 'false');
+      //       const pid = other.getAttribute('aria-controls');
+      //       const p = document.getElementById(pid);
+      //       if (p) p.hidden = true;
+      //     }
+      //   });
+      // }
+    });
+  });
+});

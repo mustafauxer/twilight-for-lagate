@@ -1,0 +1,14 @@
+/* src/assets/styles/pages/_product.scss */
+@layer components {
+  .pdp {
+    @apply md:grid md:grid-cols-2 md:gap-8;
+
+    &__title { @apply text-2xl md:text-3xl font-bold mb-4; }
+    &__price { @apply text-xl font-semibold text-gray-900 mb-4; }
+    &__actions { @apply flex items-stretch gap-3 mt-4; }
+
+    /* لو عايزة تعديلات سريعة على الأعمدة */
+    .sidebar      { @apply md:sticky top-24 md:pb-16; }
+    .main-content { @apply md:sticky top-24 md:pb-16; }
+  }
+}
