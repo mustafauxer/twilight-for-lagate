@@ -85,10 +85,316 @@
 {% block content %}
     <div class="container">
         {# add breadcumbs container in pages to make a space in case breadcrumbs is off #}
-        <nav class="breadcrumbs w-full py-5">
-            <salla-breadcrumb></salla-breadcrumb>
-        </nav>
-        <div class="pdp flex flex-col items-start md:flex-row" id="product-{{ product.id }}">
+
+        <div class="pdp flex flex-col items-start md:flex-row m-8" id="product-{{ product.id }}">
+        
+            <div class="main-content md:sticky md:overflow-hidden top-24 w-full md:w-2/4 md:pb-16">
+
+                {% hook 'product:single.description.start' %}
+
+                {% if product.brand.name %}
+                    <div class="product-brand mb-5 w-12">
+                        <a class="brand-logo" href="{{ product.brand.url }}" title="{{ product.brand.name }}">
+                            <img width="100%" height="100%" class="max-h-full object-contain"
+                                 src="{{ product.brand.logo }}"
+                                 title="{{ product.brand.name }}"
+                                 alt="{{ product.brand.name }}">
+                        </a>
+                    </div>
+                {% endif %}
+                {# ===== Header area (content + vertical icons on the RIGHT) ===== #}
+                <div class="flex items-start gap-6 ltr:flex-row rtl:flex-row-reverse">
+
+                    {# المحتوى: عنوان + وصف + سعر + رفيو +  — ياخد المساحة المتبقية #}
+                    <div class="flex-1 text-left">
+                        <h1 class="text-[20px] md:text-[22px] font-bold leading-7 text-gray-900">
+                        {{ product.name }}
+                        </h1>
+
+                        {% set sub = (product.subtitle is defined) ? product.subtitle|trim : '' %}
+                        {% set fallback = 'Inspired by the lilac embroidery that blooms softly on black' %}
+                        <p class="mt-1 text-[13px] leading-6 text-gray-500">
+                        {{ sub is not empty ? sub : fallback }}
+                        </p>
+
+                        {# السعر: محاذاة لليسار مهما كان الاتجاه (LTR/RTL) #}
+                        {% set hasSale = product.is_on_sale
+                        and (product.regular_price is defined)
+                        and (product.sale_price is defined)
+                        and (product.regular_price > product.sale_price) %}
+                        <div class="mt-2 flex items-baseline gap-4 whitespace-nowrap ltr:justify-start rtl:justify-end">
+                            {% if hasSale %}
+                                <span dir="ltr" class="text-[18px] font-semibold text-gray-900">{{ product.sale_price|money }}</span>
+                                <span dir="ltr" class="text-[16px] text-gray-400 line-through">{{ product.regular_price|money }}</span>
+                            {% else %}
+                                <span dir="ltr" class="text-[18px] font-semibold text-gray-900">
+                                {{ product.starting_price ? product.starting_price|money : product.price|money }}
+                                </span>
+                            {% endif %}
+                            
+                        </div>
+
+                        {# --- Rate block --- #}
+                        <div class="mt-4">
+                            <p class="mb-2 text-sm font-semibold text-gray-700">
+                                {{ trans('pages.products.rate') }}
+                            </p>
+
+                            {# صف نجوم فاضية (عرض فقط) #}
+                            <salla-rating-stars value="0" readonly></salla-rating-stars>
+                        </div>
+
+                    </div>
+
+                    {# عمود الأيقونات — دايمًا على اليمين بفضل rtl:flex-row-reverse #}
+                    <div class="shrink-0 flex flex-col items-end gap-5 pt-1">
+
+                        {# Wishlist #}
+                        <button
+                        type="button"
+                        class="grid place-items-center w-7 h-7 p-0 m-0 text-gray-700 hover:text-gray-900"
+                        aria-label="{{ trans('pages.products.add_to_wishlist')|default('أضف للمفضلة') }}"
+                        onclick="salla.wishlist.toggle('{{ product.id }}')">
+                        <i class="sicon-heart text-[20px] leading-none"></i>
+                        </button>
+
+                        {# Share #}
+                        <button
+                        type="button"
+                        class="grid place-items-center w-7 h-7 p-0 m-0 text-gray-700 hover:text-gray-900"
+                        aria-label="{{ trans('pages.share')|default('مشاركة') }}"
+                        onclick="salla.event.dispatch('share::open', { product_id: '{{ product.id }}' })">
+                        <i class="sicon-share text-[20px] leading-none"></i>
+                        </button>
+                    </div>
+                </div>
+                {# ===== /Header area ===== #}
+
+                <form class="form product-form" enctype="multipart/form-data" method="post"
+                    onsubmit="return salla.form.onSubmit('cart.addItem', event)" >
+                    <input type="hidden" name="id" value="{{ product.id }}">
+
+
+                    {% hook 'product:single.form.start' %}
+
+                    {# === LTR wrapper: كل حاجة من الشمال لليمين داخل الفورم === #}
+                    <div id="buy-area" dir="ltr" class="space-y-6 text-left">
+
+                    {# --- Selected Color (مع قيمة أولية من Alt أول صورة) --- #}
+                    {% set _label_try = trans('pages.products.selected_color') %}
+                    {% set selected_color_label = _label_try == 'pages.products.selected_color' ? 'Selected Color' : _label_try %}
+                    {% set first_alt = (product.images|length and product.images[0].alt is defined and product.images[0].alt|trim) ? product.images[0].alt|trim : '' %}
+
+                    <div id="selected-color-section" class="mt-0">
+                        <p class="mb-3 text-sm font-semibold text-gray-800">
+                        {{ selected_color_label }}:
+                        <span id="selected-color-name" class="font-normal">{{ first_alt ?: '—' }}</span>
+                        </p>
+
+                        {# شبكة الثمبنيلز — تبدأ من الشمال #}
+                        <div id="color-thumbs"
+                            class="mt-3 grid grid-cols-4 sm:grid-cols-6 gap-3 justify-start justify-items-start">
+                        {% for image in product.images %}
+                            <button
+                            type="button"
+                            class="group block w-full aspect-[3/4] overflow-hidden rounded-xl ring-1 ring-gray-200 hover:ring-gray-400"
+                            data-slide="{{ loop.index0 }}"
+                            onclick="selectPdpThumb({{ loop.index0 }}, '{{ image.alt|default('')|trim|e('js') }}')">
+                            <img src="{{ image.url }}" alt="{{ image.alt|default(product.name) }}" class="w-full h-full object-cover">
+                            </button>
+                        {% endfor %}
+                        </div>
+
+                        {# ملاحظة: سيب دالة selectPdpThumb مرة واحدة في الصفحة؛ لو هنا فقط فتمام #}
+                        <script>
+                        function selectPdpThumb(index, label) {
+                            var nameEl = document.getElementById('selected-color-name');
+                            if (nameEl) nameEl.textContent = (label && label.trim()) ? label : '—';
+
+                            var slider = document.getElementById('details-slider-{{ product.id }}');
+                            if (!slider) return;
+
+                            var thumbsHost = slider.querySelector('[slot="thumbs"]');
+                            if (thumbsHost && thumbsHost.children && thumbsHost.children[index]) {
+                            thumbsHost.children[index].dispatchEvent(new MouseEvent('click', { bubbles: true }));
+                            return;
+                            }
+                            var swiperEl = slider.querySelector('.swiper');
+                            if (swiperEl && swiperEl.swiper && typeof swiperEl.swiper.slideTo === 'function') {
+                            swiperEl.swiper.slideTo(index);
+                            }
+                        }
+                        </script>
+                    </div>
+
+                    {# --- Quantity تحت Selected Color ومحاذي شمال --- #}
+                    {% if product.is_hidden_quantity or product.type == 'booking' %}
+                        <input type="hidden" value="1" name="quantity" aria-label="Quantity"/>
+                    {% else %}
+                        <div>
+                        <p class="mb-2 text-sm font-semibold text-gray-800">
+                            {{ trans('pages.products.quantity')|default('Quantity') }}
+                        </p>
+                        <div class="w-44">
+                            <salla-quantity-input
+                            max="{{ product.max_quantity }}"
+                            value="1"
+                            name="quantity"
+                            aria-label="Quantity"
+                            class="w-full border border-gray-200 rounded-md">
+                            </salla-quantity-input>
+                        </div>
+                        </div>
+                    {% endif %}
+
+                    {# --- بقية الخيارات (مثلاً المقاس) هتتورّث LTR برضه --- #}
+                    {% include 'pages.partials.product.options' %}
+
+                    </div> {# /buy-area #}
+
+
+                    {% hook 'product:single.form.end' %}
+
+                    <section class="flex bg-white p-5 sm:pb-0 rounded-md rounded-b-none">
+                        <div class="center-between w-full">
+                            <label class="form-label">
+                                <b class="block">
+                                    {{ trans('pages.products.price') }}
+                                </b>
+                            </label>
+
+                            <div class="flex whitespace-nowrap price-wrapper gap-4 items-center">
+                              <div class="{{ product.is_on_sale ? '' : 'hidden' }} price_is_on_sale space-x-2 rtl:space-x-reverse whitespace-nowrap">
+                                <h2 class="total-price text-red-800 font-bold text-xl inline-block">{{product.sale_price|money}}</h2>
+                                <span class="before-price text-gray-500 line-through">{{product.regular_price|money}}</span>
+                              </div>
+                              <div class="starting-or-normal-price gap-4 {{ product.is_on_sale ? 'hidden' : 'flex' }}">
+                                {% if product.starting_price %} 
+                                  <span class="starting-price-title">{{ trans('pages.products.starting_price') }}</span>
+                                {% endif %} 
+                                <h2 class="total-price font-bold text-xl inline-block"> {{product.starting_price ? product.starting_price|money : product.price|money }}</h2>
+                              </div>
+                            </div>
+
+                            <div class="out-of-stock min-h-7 leading-7 hidden text-base text-red-600 !opacity-50 font-bold">{{ trans('pages.products.out_of_stock')}}</div>
+                        </div>
+                    </section>
+                    {# Pre-order Campaign #}
+                    {% if product.has_preorder_campaign %}
+                        <section class="mt-5 p-5">
+                            <salla-count-down pre-order='{{ product.preorder|json_encode}}' boxed labeled></salla-count-down>
+                        </section>
+                    {% endif %}
+
+                    <section class="sticky-product-bar bg-white p-5 rounded-md rounded-b-none">
+                        {# Add to cart #}
+                        <salla-add-product-button
+                                {{product.can_quick_buy ? 'quick-buy' : ''}}
+                                {{theme.settings.get('sticky_add_to_cart') ? ' support-sticky-bar' : ''}}
+                                {{product.is_require_shipping ? 'required-shipping' : ''}}
+                                {{product.has_preorder_campaign ? 'has-pre-order' : ''}}
+                                amount="{{ product.base_currency_price }}"
+                                class="mt-5 w-full sticky-product-bar__btn"
+                                product-status="{{ product.status }}"
+                                product-type="{{ product.type }}"
+                                product-id="{{ product.id }}"
+                                loader-position="end"
+                                type="submit"
+                                width="wide"
+                                {# Notify availability props#}
+                                {% if product.notify_availability %}
+                                    {{ product.notify_availability.subscribed ? 'is-subscribed' : '' }}
+                                    channels="{{ product.notify_availability.channels|join(',') }}"
+                                    subscribed-options="{{ product.notify_availability.subscribed_options|json_encode }}"
+                                    {{ product.notify_availability.options ? 'notify-options-availability' : '' }}
+                                {% endif %}>
+
+                            {{ product.add_to_cart_label }}
+                        </salla-add-product-button>
+                    </section>
+                    {% if product.is_giftable %}
+                        <salla-gifting class="mt-5" widget-subtitle="{{ gifting_intro }}" product-id="{{ product.id }}" {{ product.is_require_shipping ? 'physical-products' : ''  }}></salla-gifting>
+                    {% endif %}
+                </form>
+
+
+
+
+
+
+                {% if product.tags|length and theme.settings.get('show_tags', true) %}
+                    <div class="mb-3">
+                        {% for tag in product.tags %}
+                            <a href="{{ tag.url }}"
+                               class="rtl:ml-2 ltr:mr-2 inline-flex  text-gray-500 hover:text-primary underline text-sm mb-1">{{ tag.name }}
+                                ,</a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+
+
+
+                {% if product.sold_quantity or product.can_show_remained_quantity %}
+                    <div class="bg-white py-2.5 mb-5 rounded-md inline-flex text-sm">
+                        {% if product.sold_quantity %}
+                            <div class="px-4 !text-red-800">
+                                <i class="sicon-fire rtl:ml-1.5 ltr:mr-1.5"></i> {{ trans('pages.products.sold') }}
+                                <span>{{ pluralize('pages.products.sold_times', product.sold_quantity)|raw }}</span>
+                            </div>
+                        {% endif %}
+                        {% if product.can_show_remained_quantity %}
+                            <div class="px-4 rtl:even:border-r ltr:even:border-l even:border-gray-200">
+                                <i class="!text-red-800 sicon-box-bankers rtl:ml-1.5 ltr:mr-1.5"></i>
+                                {{ trans('pages.products.remained') }}
+                                <span>{{ product.quantity }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {% if product.sku %}
+                    <div class="mb-4 flex justify-between sm:grid sm:grid-cols-3 bg-white rounded-md px-4 py-2">
+                        <div class="flex items-center">
+                            <i class="sicon-barcode mx-1"></i>
+                            {{ trans('pages.products.sku') }}
+                        </div>
+                        <div class="text-unicode">{{ product.sku }}</div>
+                    </div>
+                {% endif %}
+                {% hook 'product:single.description' %}
+
+                {# Installment Methods #}
+                <salla-installment price="{{ product.price }}"></salla-installment>
+                {% if product.has_metadata %}
+                <salla-metadata></salla-metadata>
+                {% endif %}
+
+                {% if product.show_availability %}
+                    <section class="bg-white p-5 rounded-md mb-5 last:mb-0">
+                        <div class="center-between">
+                            <label class="flex items-center text-base">
+                                <span class="sicon-location rtl:ml-1 ltr:mr-1"></span>
+                                <span class="inline-block">{{ trans('pages.products.availability') }}</span>
+                            </label>
+                            <div class="mt-1 sm:mt-0 sm:col-span-2 text-end">
+                                <div class="flex rtl:space-x-reverse space-x-3">
+                                    <a href="#!"
+                                       onclick="salla.event.dispatch('scopes::open', {mode: 'availability', product_id: '{{ product.id }}' })"
+                                       class="group text-primary flex items-center justify-center">
+                                        <span>{{ trans('pages.products.select_branch') }}</span>
+                                        <span class="sicon-keyboard_arrow_left mr-2 transition-all group-hover:-translate-x-1"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                {% endif %}
+
+
+                {% hook 'product:single.description.end' %}
+                <salla-quick-order class="mt-5 md:-mb-2 block"></salla-quick-order>
+            </div>
+            
             <div class="sidebar md:sticky top-24 w-full md:!w-2/4 rtl:ml-8 ltr:mr-8 pb-8 md:pb-16 overflow-hidden shrink-0">
                 {% set has_many_images = product.images|length > 1 %}
                 <salla-slider
@@ -178,240 +484,6 @@
                 </salla-slider>
             </div>
 
-            <div class="main-content md:sticky md:overflow-hidden top-24 w-full md:w-2/4 md:pb-16">
-
-                {% hook 'product:single.description.start' %}
-
-                {% if product.brand.name %}
-                    <div class="product-brand mb-5 w-12">
-                        <a class="brand-logo" href="{{ product.brand.url }}" title="{{ product.brand.name }}">
-                            <img width="100%" height="100%" class="max-h-full object-contain"
-                                 src="{{ product.brand.logo }}"
-                                 title="{{ product.brand.name }}"
-                                 alt="{{ product.brand.name }}">
-                        </a>
-                    </div>
-                {% endif %}
-
-                <h1 class="pdp__title text-xl md:text-2xl leading-10 font-bold mb-6 text-gray-800">
-                    {{ product.name }}
-                </h1>
-
-                {% if product.subtitle %}
-                    <h2 class="product-entry__sub-title text-sm text-gray-500 leading-6 mb-2.5">
-                        {{ product.subtitle }}
-                    </h2>
-                {% endif %}
-
-                {% if product.rating %}
-                    <salla-rating-stars value="{{ product.rating.stars }}"
-                                        reviews="{{ product.rating.count }}"></salla-rating-stars>
-                {% endif %}
-
-                {% if product.is_taxable %}
-                    <small class="color-grey">{{ trans('pages.products.tax_included') }}</small>
-                {% endif %}
-                {# Price #}
-                <div class="flex whitespace-nowrap gap-4 items-center">
-                  <div class="{{ product.is_on_sale ? '' : 'hidden' }} space-x-2 rtl:space-x-reverse whitespace-nowrap">
-                      <h4 class="text-red-800 font-bold text-xl inline-block">{{product.sale_price|money}}</h4>
-                      <span class="text-gray-500 line-through">{{product.regular_price|money}}</span>
-                  </div>
-                  <div class="gap-4 {{ product.is_on_sale ? 'hidden' : 'flex' }}">
-                      {% if product.starting_price %} 
-                          <span class="">{{ trans('pages.products.starting_price') }}</span>
-                      {% endif %} 
-                          <h2 class=" font-bold text-xl inline-block"> {{product.starting_price ? product.starting_price|money : product.price|money }}</h2>
-                  </div>
-                </div>
-
-                <div class="product__description p-2 px-5 sm:p-1 leading-7 mb-3">
-                    {% set product_desc = product.description|replace({"&nbsp;":"\n"}) %}
-                    {% if product.has_read_more %}
-                        <article class="article article--main relative leading-8 overflow-hidden transition-all max-h-0 duration-300 py-4"
-                            id="more-content" style="max-height:5.25rem">
-                            {{ product_desc|raw }}
-                        </article>
-
-                        {# Read More Button #}
-                        <a id="btn-show-more" class="link--primary inline-block mt-2 cursor-pointer">
-                            {{ trans('pages.products.read_more') }}
-                        </a>
-                    {% else %}
-                        <article class="article--main pb-1">
-                            {{ product_desc|raw }}
-                        </article>
-                    {% endif %}
-                </div>
-
-                {% if product.tags|length and theme.settings.get('show_tags', true) %}
-                    <div class="mb-3">
-                        {% for tag in product.tags %}
-                            <a href="{{ tag.url }}"
-                               class="rtl:ml-2 ltr:mr-2 inline-flex  text-gray-500 hover:text-primary underline text-sm mb-1">{{ tag.name }}
-                                ,</a>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-
-                <div class="flex rtl:space-x-reverse space-x-3">
-                    <salla-social-share class="inline-flex mb-5" aria-label="social share"></salla-social-share>
-
-                    <salla-button
-                            class="btn--wishlist animated hidden sm:inline-flex"
-                            data-id="{{ product.id }}"
-                            onclick="salla.wishlist.toggle('{{ product.id }}')"
-                            shape="icon"
-                            fill="outline"
-                            color="light"
-							aria-label="add to wishlist">
-                        <i class="sicon-heart"></i>
-                    </salla-button>
-                </div>
-
-                {% if product.sold_quantity or product.can_show_remained_quantity %}
-                    <div class="bg-white py-2.5 mb-5 rounded-md inline-flex text-sm">
-                        {% if product.sold_quantity %}
-                            <div class="px-4 !text-red-800">
-                                <i class="sicon-fire rtl:ml-1.5 ltr:mr-1.5"></i> {{ trans('pages.products.sold') }}
-                                <span>{{ pluralize('pages.products.sold_times', product.sold_quantity)|raw }}</span>
-                            </div>
-                        {% endif %}
-                        {% if product.can_show_remained_quantity %}
-                            <div class="px-4 rtl:even:border-r ltr:even:border-l even:border-gray-200">
-                                <i class="!text-red-800 sicon-box-bankers rtl:ml-1.5 ltr:mr-1.5"></i>
-                                {{ trans('pages.products.remained') }}
-                                <span>{{ product.quantity }}</span>
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endif %}
-                {% if product.sku %}
-                    <div class="mb-4 flex justify-between sm:grid sm:grid-cols-3 bg-white rounded-md px-4 py-2">
-                        <div class="flex items-center">
-                            <i class="sicon-barcode mx-1"></i>
-                            {{ trans('pages.products.sku') }}
-                        </div>
-                        <div class="text-unicode">{{ product.sku }}</div>
-                    </div>
-                {% endif %}
-                {% hook 'product:single.description' %}
-
-                {# Installment Methods #}
-                <salla-installment price="{{ product.price }}"></salla-installment>
-                {% if product.has_metadata %}
-                <salla-metadata></salla-metadata>
-                {% endif %}
-
-                {% if product.show_availability %}
-                    <section class="bg-white p-5 rounded-md mb-5 last:mb-0">
-                        <div class="center-between">
-                            <label class="flex items-center text-base">
-                                <span class="sicon-location rtl:ml-1 ltr:mr-1"></span>
-                                <span class="inline-block">{{ trans('pages.products.availability') }}</span>
-                            </label>
-                            <div class="mt-1 sm:mt-0 sm:col-span-2 text-end">
-                                <div class="flex rtl:space-x-reverse space-x-3">
-                                    <a href="#!"
-                                       onclick="salla.event.dispatch('scopes::open', {mode: 'availability', product_id: '{{ product.id }}' })"
-                                       class="group text-primary flex items-center justify-center">
-                                        <span>{{ trans('pages.products.select_branch') }}</span>
-                                        <span class="sicon-keyboard_arrow_left mr-2 transition-all group-hover:-translate-x-1"></span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                {% endif %}
-
-                <form class="form product-form" enctype="multipart/form-data" method="post"
-                      onsubmit="return salla.form.onSubmit('cart.addItem', event)" >
-                    <input type="hidden" name="id" value="{{ product.id }}">
-
-
-                    {% hook 'product:single.form.start' %}
-
-                    {% include 'pages.partials.product.options' %}
-
-                    {% hook 'product:single.form.end' %}
-
-                    <section class="flex bg-white p-5 sm:pb-0 rounded-md rounded-b-none">
-                        <div class="center-between w-full">
-                            <label class="form-label">
-                                <b class="block">
-                                    {{ trans('pages.products.price') }}
-                                </b>
-                            </label>
-
-                            <div class="flex whitespace-nowrap price-wrapper gap-4 items-center">
-                              <div class="{{ product.is_on_sale ? '' : 'hidden' }} price_is_on_sale space-x-2 rtl:space-x-reverse whitespace-nowrap">
-                                <h2 class="total-price text-red-800 font-bold text-xl inline-block">{{product.sale_price|money}}</h2>
-                                <span class="before-price text-gray-500 line-through">{{product.regular_price|money}}</span>
-                              </div>
-                              <div class="starting-or-normal-price gap-4 {{ product.is_on_sale ? 'hidden' : 'flex' }}">
-                                {% if product.starting_price %} 
-                                  <span class="starting-price-title">{{ trans('pages.products.starting_price') }}</span>
-                                {% endif %} 
-                                <h2 class="total-price font-bold text-xl inline-block"> {{product.starting_price ? product.starting_price|money : product.price|money }}</h2>
-                              </div>
-                            </div>
-
-                            <div class="out-of-stock min-h-7 leading-7 hidden text-base text-red-600 !opacity-50 font-bold">{{ trans('pages.products.out_of_stock')}}</div>
-                        </div>
-                    </section>
-                    {# Pre-order Campaign #}
-                    {% if product.has_preorder_campaign %}
-                        <section class="mt-5 p-5">
-                            <salla-count-down pre-order='{{ product.preorder|json_encode}}' boxed labeled></salla-count-down>
-                        </section>
-                    {% endif %}
-
-                    <section class="sticky-product-bar bg-white p-5 rounded-md rounded-b-none">
-                        {# Quantity #}
-                        {% if product.is_hidden_quantity or product.type == 'booking' %}
-                            <input type="hidden" value="1" name="quantity" aria-label="Quantity"/>
-                        {% else %}
-                            <div class="sticky-product-bar__quantity center-between mb-5">
-                                <label class="form-label font-bold">
-                                    {{ trans('pages.products.quantity') }}
-                                </label>
-                                <salla-quantity-input max="{{ product.max_quantity }}" value="1" name="quantity" aria-label="Quantity"
-                                  class="border-gray-200 flex justify-end"></salla-quantity-input>
-                            </div>
-                        {% endif %}
-                        {# Add to cart #}
-                        <salla-add-product-button
-                                {{product.can_quick_buy ? 'quick-buy' : ''}}
-                                {{theme.settings.get('sticky_add_to_cart') ? ' support-sticky-bar' : ''}}
-                                {{product.is_require_shipping ? 'required-shipping' : ''}}
-                                {{product.has_preorder_campaign ? 'has-pre-order' : ''}}
-                                amount="{{ product.base_currency_price }}"
-                                class="mt-5 w-full sticky-product-bar__btn"
-                                product-status="{{ product.status }}"
-                                product-type="{{ product.type }}"
-                                product-id="{{ product.id }}"
-                                loader-position="end"
-                                type="submit"
-                                width="wide"
-                                {# Notify availability props#}
-                                {% if product.notify_availability %}
-                                    {{ product.notify_availability.subscribed ? 'is-subscribed' : '' }}
-                                    channels="{{ product.notify_availability.channels|join(',') }}"
-                                    subscribed-options="{{ product.notify_availability.subscribed_options|json_encode }}"
-                                    {{ product.notify_availability.options ? 'notify-options-availability' : '' }}
-                                {% endif %}>
-
-                            {{ product.add_to_cart_label }}
-                        </salla-add-product-button>
-                    </section>
-                    {% if product.is_giftable %}
-                        <salla-gifting class="mt-5" widget-subtitle="{{ gifting_intro }}" product-id="{{ product.id }}" {{ product.is_require_shipping ? 'physical-products' : ''  }}></salla-gifting>
-                    {% endif %}
-                </form>
-
-                {% hook 'product:single.description.end' %}
-                <salla-quick-order class="mt-5 md:-mb-2 block"></salla-quick-order>
-            </div>
         </div>
         <salla-offer></salla-offer>
     </div>
