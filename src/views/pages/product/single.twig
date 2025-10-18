@@ -188,7 +188,7 @@
                         <div id="selected-color-section" class="mt-0">
                             <p class="mb-3 text-sm font-semibold text-gray-800">
                             {{ selected_color_label }}:
-                            <span id="selected-color-name" class="font-normal">{{ first_alt ?: '—' }}</span>
+                            <span id="selected-color-name" class="font-normal">{{ first_alt is not empty ? first_alt : '—' }}</span>
                             </p>
 
                             {# شبكة الثمبنيلز — تبدأ من الشمال #}
@@ -265,11 +265,6 @@
                                 <span class="sicon-keyboard_arrow_right text-[14px]"></span>
                                 </a>
                             </div>
-{# Debug مؤقت: اعرض كل الخيارات وأسمائها وأنواعها #}
-{% for opt in product.options %}
-  <div class="text-xs text-gray-500">[{{ opt.id }}] {{ opt.name }} — type: {{ opt.type }}</div>
-{% endfor %}
-
                             <div id="native-options">
                                 {% include 'pages.partials.product.options' %}
                             </div>
