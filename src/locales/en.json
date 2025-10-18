@@ -24,7 +24,9 @@
       "option_content": "Content"
     },
     "products": {
-      "rate": "Rate"
+      "rate": "Rate",
+      "size_options": "Size Options",
+      "find_my_size": "Find My Size"
     }
   },
   "common": {

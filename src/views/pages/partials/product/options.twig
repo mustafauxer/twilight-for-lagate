@@ -28,9 +28,126 @@
 | product.options[].details[].is_selected         | bool                       | Does current option selected? (useful in cart page)                                                         |
 | product.options[].details[].is_out              | bool                       | Does current option out of stock?                                                                           |
 #}
+{# ===== Custom Size Pills (robust) + keep native options for the rest ===== #}
+
+{# 1) التعرّف على خيار "المقاس" بالاسم أو بالـ ID (الأضمن) #}
+{% set size_option = null %}
+{% set SIZE_OPTION_ID = 750237441 %} {# <<-- من لقطة الديباج اللي ارسلتها #}
 {% if product.options|length %}
-    <salla-product-options options="{{ product.options }}" product-id="{{ product.id }}"></salla-product-options>
+  {# أولوية المطابقة بالـ ID لو تقدر توفره #}
+  {% for opt in product.options %}
+    {% if opt.id == SIZE_OPTION_ID %}
+      {% set size_option = opt %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+
+  {# فالباك بالاسم لو اختلف الـ ID #}
+  {% if size_option is null %}
+    {% for opt in product.options %}
+      {% set n = opt.name|lower|trim %}
+      {% if 'المقاس' in n or 'size' in n %}
+        {% set size_option = opt %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
 {% endif %}
+
+{# 2) عنوان القسم + الأزرار إن وُجد خيار المقاس #}
+{% if size_option and size_option.details|length %}
+  <div class="mt-6">
+    <div class="mb-3 flex items-center justify-between">
+      <p class="text-sm font-semibold text-gray-800">
+        {{ trans('pages.products.size_options')|default('Size Options') }}
+      </p>
+      <a href="#!" class="text-sm text-gray-700 hover:underline inline-flex items-center gap-1">
+        {{ trans('pages.products.find_my_size')|default('Find My Size') }}
+        <span class="sicon-keyboard_arrow_right text-[14px]"></span>
+      </a>
+    </div>
+
+    {# حدِّد المختار مبدئيًا (إن وجد)، وإلا أول تفصيلة #}
+    {% set preselected = (size_option.details|filter(d => d.is_selected))|first %}
+    {% if preselected is null %}
+      {% set preselected = size_option.details|first %}
+    {% endif %}
+
+    {# hidden input بالصّيغة التي تتوقعها سِلّة: options[OPTION_ID]=DETAIL_ID #}
+    <input
+      type="hidden"
+      id="size-input"
+      name="options[{{ size_option.id }}]"
+      value="{{ preselected.id }}"
+    />
+
+    {# الأزرار (pills) #}
+    <div id="size-pills" class="mt-3 flex flex-wrap gap-3">
+      {% for d in size_option.details %}
+        {% set active = d.id == preselected.id %}
+        <button
+          type="button"
+          class="min-w-[52px] h-9 px-3 rounded border text-sm transition
+                 {{ active ? 'bg-black text-white border-black' : 'bg-white text-gray-900 border-gray-400 hover:border-black' }}"
+          data-detail-id="{{ d.id }}"
+          {% if d.is_out %} disabled class="opacity-40 cursor-not-allowed" {% endif %}
+        >{{ d.name }}</button>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+{# 3) نُبقي بقية الخيارات بالرندر الافتراضي #}
+{% if product.options|length %}
+  <div id="native-options">
+    <salla-product-options options="{{ product.options }}" product-id="{{ product.id }}"></salla-product-options>
+  </div>
+{% endif %}
+
+{# 4) JS: تفعيل الأزرار + إخفاء سطر المقاس داخل الرندر الافتراضي (حتى لا يتكرر) #}
+<script>
+(function () {
+  // تفعيل الأزرار وتحديث hidden input
+  var pillsHost = document.getElementById('size-pills');
+  var hiddenInput = document.getElementById('size-input');
+  if (pillsHost && hiddenInput) {
+    pillsHost.addEventListener('click', function (e) {
+      var btn = e.target.closest('button[data-detail-id]');
+      if (!btn || btn.disabled) return;
+
+      hiddenInput.value = btn.getAttribute('data-detail-id');
+
+      // بدّل الحالات البصرية
+      pillsHost.querySelectorAll('button[data-detail-id]').forEach(function (b) {
+        b.classList.remove('bg-black','text-white','border-black');
+        b.classList.add('bg-white','text-gray-900','border-gray-400');
+      });
+      btn.classList.remove('bg-white','text-gray-900','border-gray-400');
+      btn.classList.add('bg-black','text-white','border-black');
+
+      // أبلغ أي سكربتات تراقب تغيّر الخيارات
+      hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+  }
+
+  // إخفاء صف المقاس داخل الرندر الافتراضي لتجنّب التكرار
+  var nativeHost = document.getElementById('native-options');
+  function hideNativeSizeRow() {
+    if (!nativeHost) return;
+    // دور على أي عنصر نصّه يحتوي "المقاس" أو "size" وأخفي أقرب صف
+    nativeHost.querySelectorAll('*').forEach(function (el) {
+      var t = (el.textContent || '').toLowerCase();
+      if (t.includes('المقاس') || t.includes('size')) {
+        var row = el.closest('.form-group, .s-form-group, .product-option, section, .field, div');
+        if (row) row.style.display = 'none';
+      }
+    });
+  }
+  hideNativeSizeRow();
+  new MutationObserver(hideNativeSizeRow).observe(nativeHost, { childList: true, subtree: true });
+})();
+</script>
+
 
 {% if product.weight or product.has_size_guide %}
     <section class="bg-white p-5 rounded-md mb-5">
