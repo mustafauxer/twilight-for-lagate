@@ -2232,8 +2232,11 @@ select{
     --tw-ring-opacity: 1;
     --tw-ring-color: rgba(0, 0, 0, var(--tw-ring-opacity, 1));
 }
-.ring-transparent{
-    --tw-ring-color: transparent;
+.ring-offset-1{
+    --tw-ring-offset-width: 1px;
+}
+.ring-offset-white{
+    --tw-ring-offset-color: #fff;
 }
 .filter{
     filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
@@ -23324,6 +23327,62 @@ body.font-dinnextltarabic-regular .btn--add-to-cart {
   padding-bottom: 0 !important;
 }
 /* src/assets/styles/pages/_product.scss */
+/* زر السلة بالأسود — نطبّق على الـhost نفسه */
+salla-add-product-button.s-add-to-cart--black {
+  background: #000 !important;
+  color: #fff !important;
+}
+salla-add-product-button.s-add-to-cart--black {
+  /* شكل زر محترم */
+  display: flex; /* علشان نوسّط النص عموديًا */
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 56px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  font-weight: 700;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+/* هوفر */
+salla-add-product-button.s-add-to-cart--black:hover {
+  background: #111 !important;
+}
+/* حالة التعطيل لو ظهرت */
+salla-add-product-button.s-add-to-cart--black[disabled],
+salla-add-product-button.s-add-to-cart--black[aria-disabled=true] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+/* زر السلة بالأسود — نطبّق على الـhost نفسه */
+salla-add-product-button.s-add-to-cart--black {
+  background: #000 !important;
+  color: #fff !important;
+}
+salla-add-product-button.s-add-to-cart--black {
+  /* شكل زر محترم */
+  display: flex; /* علشان نوسّط النص عموديًا */
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 56px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  font-weight: 700;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+/* هوفر */
+salla-add-product-button.s-add-to-cart--black:hover {
+  background: #111 !important;
+}
+/* حالة التعطيل لو ظهرت */
+salla-add-product-button.s-add-to-cart--black[disabled],
+salla-add-product-button.s-add-to-cart--black[aria-disabled=true] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 .before\:text-orange-300::before{
     content: var(--tw-content);
     --tw-text-opacity: 1;
@@ -23419,10 +23478,6 @@ body.font-dinnextltarabic-regular .btn--add-to-cart {
     --tw-shadow-colored: 5px 10px 30px var(--tw-shadow-color);
     box-shadow: 0 0 rgba(0,0,0,0), 0 0 rgba(0,0,0,0), 5px 10px 30px #2B2D340D;;
     box-shadow: var(--tw-ring-offset-shadow, 0 0 rgba(0,0,0,0)), var(--tw-ring-shadow, 0 0 rgba(0,0,0,0)), var(--tw-shadow);
-}
-.hover\:ring-gray-400:hover{
-    --tw-ring-opacity: 1;
-    --tw-ring-color: rgba(156, 163, 175, var(--tw-ring-opacity, 1));
 }
 .group:hover .group-hover\:-translate-x-1{
     --tw-translate-x: -0.25rem;
