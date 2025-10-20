@@ -2095,11 +2095,6 @@ select{
     color: rgba(29, 31, 31, 1);
     color: rgba(29, 31, 31, var(--tw-text-opacity, 1));
 }
-.text-gray-300{
-    --tw-text-opacity: 1;
-    color: rgba(209, 213, 219, 1);
-    color: rgba(209, 213, 219, var(--tw-text-opacity, 1));
-}
 .text-gray-400{
     --tw-text-opacity: 1;
     color: rgba(156, 163, 175, 1);
@@ -23723,6 +23718,79 @@ salla-quantity-input::part(input) {
   text-decoration: none;
   cursor: default;
 }
+/* نفس إحساس Check in Store + خط سفلي */
+.link-utility {
+  color: #111;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  font-weight: 500;
+  cursor: pointer;
+}
+.link-utility:hover {
+  color: #000;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+.link-utility .sicon-keyboard_arrow_right {
+  font-size: 14px;
+  line-height: 1;
+}
+/* Find My Size like Check in Store (force) */
+#size-header #find-my-size {
+  color: #111 !important;
+  -webkit-text-decoration: underline !important;
+  text-decoration: underline !important;
+}
+#size-header #find-my-size {
+  font-weight: 500;
+  cursor: pointer;
+}
+#size-header #find-my-size:hover {
+  color: #000 !important;
+  -webkit-text-decoration: underline !important;
+  text-decoration: underline !important;
+}
+#size-header #find-my-size .sicon-keyboard_arrow_right {
+  font-size: 14px;
+  line-height: 1;
+}
+/* لو نسيت تعديل الـHTML ولسه فيه span رمادية – خلّيها برضه شكل لينك */
+#size-header > span {
+  color: #111 !important;
+  -webkit-text-decoration: underline !important;
+  text-decoration: underline !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+}
+/*---------------------------------------------------------------------------------------------------------------------------*/
+/* قرّب Check in Store من زر إضافة للسلة */
+.pdp-utility-row {
+  margin-bottom: 0px !important;
+}
+/* قلّل المسافة العلوية للزر نفسه (بتغطي mt-3 اللي في الـHTML) */
+.sticky-product-bar__btn {
+  margin-top: 0px !important;
+}
+/*---------------------------------------------------------------------------------------------------------------------------*/
+/* مساحة بسيطة وفصل خفيف تحت زر الشراء */
+.pdp-installments {
+  margin-top: 12px !important;
+}
+.pdp-installments {
+  padding-top: 12px;
+  border-top: 1px solid #E5E7EB;
+}
+/* لا تدوير إطلاقًا */
+.pdp-installments *,
+salla-installment,
+salla-installment * {
+  border-radius: 0 !important;
+}
+@media (min-width: 768px) {
+  .pdp-installments {
+    margin-top: 14px;
+  }
+}
 .before\:text-orange-300::before{
     content: var(--tw-content);
     --tw-text-opacity: 1;
@@ -23789,11 +23857,6 @@ salla-quantity-input::part(input) {
     --tw-text-opacity: 1;
     color: rgba(29, 31, 31, 1);
     color: rgba(29, 31, 31, var(--tw-text-opacity, 1));
-}
-.hover\:text-gray-700:hover{
-    --tw-text-opacity: 1;
-    color: rgba(55, 65, 81, 1);
-    color: rgba(55, 65, 81, var(--tw-text-opacity, 1));
 }
 .hover\:text-gray-900:hover{
     --tw-text-opacity: 1;
