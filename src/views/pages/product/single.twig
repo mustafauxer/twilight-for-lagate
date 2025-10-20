@@ -578,35 +578,11 @@
                         </button>
                     </div>
 
-                    {# ===== أقساط/الدفع لاحقًا تحت الزر ===== #}
-                    <div class="pdp-installments">
-                        <salla-installment
-                            price="{{
-                            product.is_on_sale
-                                ? (product.sale_price ?? product.price)
-                                : (product.starting_price ?? product.price)
-                            }}"></salla-installment>
-                    </div>
 
-                    {# فالباك بسيط لو ودجت الأقساط مش مُتاح — نسخة آمنة #}
-                    {% set base_price =
-                    (product.is_on_sale and product.sale_price)
-                        ? product.sale_price
-                        : (product.starting_price ? product.starting_price : product.price)
-                    %}
-
-                    {% if base_price %}
-                        <div class="installment-fallback" style="margin-top:10px; font-size:13px; color:#374151;">
-                            <div style="display:flex; align-items:center; gap:8px;">
-                            <img src="https://tabby-img.s3.amazonaws.com/logo-dark.svg" alt="Tabby" style="height:14px;">
-                            <span>
-                                قسّط حتى {{ '%.2f'|format(base_price / 4) }} على 4 دفعات بدون فوائد.
-                            </span>
-                            </div>
-                            <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
-                            <img src="https://tamara.co/wp-content/uploads/2023/06/tamara-logo-dark.svg" alt="Tamara" style="height:14px;">
-                            <span>أو ادفع لاحقًا وفق شروط مزوّد الخدمة.</span>
-                            </div>
+                    {# --- Installments (official way) --- #}
+                    {% if product.base_currency_price is defined and product.base_currency_price %}
+                        <div class="pdp-installments">
+                            <salla-installment price="{{ product.base_currency_price }}"></salla-installment>
                         </div>
                     {% endif %}
 
@@ -625,83 +601,6 @@
                         <salla-gifting class="mt-5" widget-subtitle="{{ gifting_intro }}" product-id="{{ product.id }}" {{ product.is_require_shipping ? 'physical-products' : ''  }}></salla-gifting>
                     {% endif %}#}
                 </form>
-
-
-
-
-
-
-                {#{% if product.tags|length and theme.settings.get('show_tags', true) %}
-                    <div class="mb-3">
-                        {% for tag in product.tags %}
-                            <a href="{{ tag.url }}"
-                               class="rtl:ml-2 ltr:mr-2 inline-flex  text-gray-500 hover:text-primary underline text-sm mb-1">{{ tag.name }}
-                                ,</a>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-
-
-
-
-                {% if product.sold_quantity or product.can_show_remained_quantity %}
-                    <div class="bg-white py-2.5 mb-5 rounded-md inline-flex text-sm">
-                        {% if product.sold_quantity %}
-                            <div class="px-4 !text-red-800">
-                                <i class="sicon-fire rtl:ml-1.5 ltr:mr-1.5"></i> {{ trans('pages.products.sold') }}
-                                <span>{{ pluralize('pages.products.sold_times', product.sold_quantity)|raw }}</span>
-                            </div>
-                        {% endif %}
-                        {% if product.can_show_remained_quantity %}
-                            <div class="px-4 rtl:even:border-r ltr:even:border-l even:border-gray-200">
-                                <i class="!text-red-800 sicon-box-bankers rtl:ml-1.5 ltr:mr-1.5"></i>
-                                {{ trans('pages.products.remained') }}
-                                <span>{{ product.quantity }}</span>
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endif %}
-                {% if product.sku %}
-                    <div class="mb-4 flex justify-between sm:grid sm:grid-cols-3 bg-white rounded-md px-4 py-2">
-                        <div class="flex items-center">
-                            <i class="sicon-barcode mx-1"></i>
-                            {{ trans('pages.products.sku') }}
-                        </div>
-                        <div class="text-unicode">{{ product.sku }}</div>
-                    </div>
-                {% endif %}
-                {% hook 'product:single.description' %}
-
-                Installment Methods 
-                <salla-installment price="{{ product.price }}"></salla-installment>
-                {% if product.has_metadata %}
-                    <salla-metadata></salla-metadata>
-                {% endif %}
-
-                {% if product.show_availability %}
-                    <section class="bg-white p-5 rounded-md mb-5 last:mb-0">
-                        <div class="center-between">
-                            <label class="flex items-center text-base">
-                                <span class="sicon-location rtl:ml-1 ltr:mr-1"></span>
-                                <span class="inline-block">{{ trans('pages.products.availability') }}</span>
-                            </label>
-                            <div class="mt-1 sm:mt-0 sm:col-span-2 text-end">
-                                <div class="flex rtl:space-x-reverse space-x-3">
-                                    <a href="#!"
-                                       onclick="salla.event.dispatch('scopes::open', {mode: 'availability', product_id: '{{ product.id }}' })"
-                                       class="group text-primary flex items-center justify-center">
-                                        <span>{{ trans('pages.products.select_branch') }}</span>
-                                        <span class="sicon-keyboard_arrow_left mr-2 transition-all group-hover:-translate-x-1"></span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                {% endif %}
-
-
-                {% hook 'product:single.description.end' %}
-                <salla-quick-order class="mt-5 md:-mb-2 block"></salla-quick-order>#}
             </div>
 
             {# Code of left side which is images #}
@@ -966,4 +865,6 @@
         .observe(slider, {childList:true, subtree:true});
     })();
     </script>
+
+
 {% endblock %}
