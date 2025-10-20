@@ -83,6 +83,50 @@
 #}
 {% extends "layouts.master" %}
 {% block content %}
+    {# Force white background on product page only #}
+    <style>
+        html, body { background: #fff !important; }
+    </style>
+
+<style>
+  /* ثبّت ألوان الزر باستخدام متغيرات مكوّن سلة */
+  salla-add-product-button.sticky-product-bar__btn{
+    --s-button-height: 54px;
+    --s-button-radius: 12px;
+    --s-button-bg: #000;            /* خلفية سوداء */
+    --s-button-bg-hover: #111;      /* أغمق عند الهوفر */
+    --s-button-color: #fff;         /* نص أبيض */
+    --s-button-font-weight: 700;
+    --s-button-text-transform: uppercase;
+    --s-loader-color: #fff;
+  }
+
+  /* فالباك + إجبار اللون حتى لو المكوّن عامل disabled */
+  salla-add-product-button.sticky-product-bar__btn::part(button){
+    background:#000 !important;
+    color:#fff !important;
+    height:54px;
+    border-radius:12px;
+    font-weight:700;
+    text-transform:uppercase;
+    opacity:1 !important;        /* أمنع البهتان */
+  }
+  salla-add-product-button.sticky-product-bar__btn::part(button):hover{
+    background:#111 !important;
+  }
+  /* في حال المكوّن يحط disabled أو aria-disabled */
+  salla-add-product-button.sticky-product-bar__btn::part(button)[disabled],
+  salla-add-product-button.sticky-product-bar__btn::part(button)[aria-disabled="true"]{
+    background:#000 !important;
+    color:#fff !important;
+    opacity:1 !important;         /* خليه واضح */
+    cursor:not-allowed;           /* بس يبان إنه غير قابل للضغط لو فعلاً غير متاح */
+  }
+</style>
+
+
+
+
     <div class="container">
         {# add breadcumbs container in pages to make a space in case breadcrumbs is off #}
 
@@ -250,91 +294,248 @@
                         {# --- بقية الخيارات (مثلاً المقاس) هتتورّث LTR برضه --- #}
                         {# --- Size block wrapper --- #}
                         <div class="mt-6">
-                            {% set _size_lbl_try = trans('pages.products.size_options') %}
-                            {% set size_label = _size_lbl_try == 'pages.products.size_options' ? 'خيارات المقاس' : _size_lbl_try %}
+                            {% include 'pages.partials.product.options' %}
+                            <div id="size-pills" class="mt-3 flex flex-wrap gap-3"></div>
 
-                            {% set _find_lbl_try = trans('pages.products.find_my_size') %}
-                            {% set find_label = _find_lbl_try == 'pages.products.find_my_size' ? 'اعرف مقاسي' : _find_lbl_try %}
+                            <script>
+                            (function () {
+                            var SIZE_OPTION_ID = 750237441; // عدّلها لو ID خيار المقاس اتغيّر
+                            var pillsHost  = document.getElementById('size-pills');
+                            var nativeHost = document.getElementById('native-options') || document; // fallback
 
-                            <div class="mb-3 flex items-center justify-between">
-                                <p class="text-sm font-semibold text-gray-800">
-                                {{ size_label }}
-                                </p>
-                                <a href="#!" class="text-sm text-gray-700 hover:underline inline-flex items-center gap-1">
-                                {{ find_label }}
-                                <span class="sicon-keyboard_arrow_right text-[14px]"></span>
-                                </a>
-                            </div>
-                            <div id="native-options">
-                                {% include 'pages.partials.product.options' %}
-                            </div>
+                            if (!pillsHost) return;
+
+                            // ============ Utilities ============
+                            function cls(el, listAdd, listRemove){
+                                if (!el) return;
+                                (listRemove||[]).forEach(c=>el.classList.remove(c));
+                                (listAdd||[]).forEach(c=>el.classList.add(c));
+                            }
+                            function styleBtn(btn, active){
+                                var act  = ['bg-black','text-white','border-black'];
+                                var inact= ['bg-white','text-gray-900','border-gray-400','hover:border-black'];
+                                if (active){ cls(btn, act, inact); } else { cls(btn, inact, act); }
+                            }
+                            function selectClosestRow(el){
+                                if (!el) return null;
+                                var cur = el;
+                                for (var i=0; i<8 && cur; i++){
+                                if (cur.matches('.form-group, .s-form-group, .product-option, section, .field, div')) return cur;
+                                cur = cur.parentElement;
+                                }
+                                return null;
+                            }
+
+                            // جرّب إيجاد select داخل الـ Light DOM
+                            function findSelectInLightDOM(){
+                                // بالـID:
+                                var byId = nativeHost.querySelector('select[name="options['+SIZE_OPTION_ID+']"]');
+                                if (byId) return byId;
+                                // أيّ select يتبع options[
+                                return nativeHost.querySelector('select[name^="options["]') || null;
+                            }
+
+                            // جرّب إيجاد select داخل Shadow DOM للويب-كمبوننت
+                            function findSelectInShadow(){
+                                var comp = nativeHost.querySelector('salla-product-options');
+                                if (!comp) return null;
+
+                                // shadowRoot قد يكون open، ولو كان closed مش هنقدر نقرأه
+                                var sr = comp.shadowRoot || null;
+                                if (!sr) return null;
+
+                                // مباشر إن وجد:
+                                var sel = sr.querySelector('select[name="options['+SIZE_OPTION_ID+']"]') ||
+                                        sr.querySelector('select[name^="options["]"]') ||
+                                        sr.querySelector('select');
+                                if (sel) return sel;
+
+                                // في بعض الثيمات، select يكون داخل salla-select (ويب-كمبوننت تاني)
+                                var sallaSelect = sr.querySelector('salla-select');
+                                if (sallaSelect && sallaSelect.shadowRoot){
+                                var inner = sallaSelect.shadowRoot.querySelector('select');
+                                if (inner) return inner;
+                                }
+                                return null;
+                            }
+
+                            function getNativeSelect(){
+                                return findSelectInLightDOM() || findSelectInShadow();
+                            }
+
+                            function buildPillsFromSelect(selectEl){
+                                if (!selectEl || !selectEl.options || !selectEl.options.length) return false;
+
+                                pillsHost.innerHTML = '';
+                                var current = selectEl.value;
+
+                                Array.prototype.forEach.call(selectEl.options, function(opt){
+                                // تجاهل placeholder "اختر"
+                                if (!opt.value) return;
+
+                                var btn = document.createElement('button');
+                                btn.type = 'button';
+                                btn.dataset.value = opt.value;
+                                btn.textContent   = opt.textContent.trim();
+                                btn.disabled      = !!opt.disabled || opt.getAttribute('aria-disabled') === 'true';
+                                btn.className     = 'min-w-[52px] h-9 px-3 rounded border text-sm transition';
+                                styleBtn(btn, String(opt.value) === String(current));
+                                if (btn.disabled) btn.classList.add('opacity-40','cursor-not-allowed');
+
+                                btn.addEventListener('click', function(){
+                                    if (btn.disabled) return;
+                                    // حدّث select الأصلي
+                                    selectEl.value = btn.dataset.value;
+                                    selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+
+                                    // عدّل الحالات البصرية
+                                    pillsHost.querySelectorAll('button[data-value]').forEach(function(b){
+                                    styleBtn(b, b === btn);
+                                    });
+                                });
+
+                                pillsHost.appendChild(btn);
+                                });
+
+                                // اخفِ صف الحقل الأصلي
+                                var row = selectClosestRow(selectEl);
+                                if (row) row.style.display = 'none';
+
+                                return true;
+                            }
+
+                            // ============ التنفيذ ============
+                            function tryBuild(){
+                                var sel = getNativeSelect();
+                                if (sel) { buildPillsFromSelect(sel); return true; }
+                                return false;
+                            }
+
+                            // جرّب فوراً
+                            if (tryBuild()) return;
+
+                            // لو الويب-كمبوننت لسه ما رندرش، راقب لحد ما يظهر
+                            var obs = new MutationObserver(function(){
+                                if (tryBuild()) obs.disconnect();
+                            });
+                            obs.observe(nativeHost, { childList: true, subtree: true });
+
+                            // تأمين إضافي بعد تأخر رندر
+                            setTimeout(tryBuild, 800);
+                            })();
+                            </script>
+
+
+                            <script>
+                            (function () {
+                            // عدّل الرقم لو تغيّر ID خيار المقاس عندك
+                            var SIZE_OPTION_ID = 750237441;
+
+                            var host = document.getElementById('native-options');
+                            if (!host) return;
+
+                            function hideNativeSizeRow() {
+                                var input = host.querySelector('[name="options[' + SIZE_OPTION_ID + ']"]');
+                                if (!input) return;
+                                // عشان ما يتبعتش مرتين
+                                input.disabled = true;
+
+                                // اخفي السطر كله (اللي فيه اللابل "المقاس" وحقل الاختيار)
+                                var row = input.closest('.form-group, .s-form-group, .product-option, section, .field, div');
+                                if (row) row.style.display = 'none';
+                            }
+
+                            // جرّب فورًا، وبعدين راقب أي تحديث من Web Component
+                            hideNativeSizeRow();
+                            new MutationObserver(hideNativeSizeRow).observe(host, { childList: true, subtree: true });
+                            })();
+                            </script>
+                            
+                            {# لاخفاء اختر المقاس الاصلي #} 
+                            <script>
+                            (function () {
+                            var SIZE_OPTION_ID = 750237441; // عدّلها لو ID المقاس مختلف
+                            var nativeHost = document.getElementById('native-options');
+                            if (!nativeHost) return;
+
+                            function isVisible(el){
+                                return !!(el && el.offsetParent !== null && getComputedStyle(el).display !== 'none' && getComputedStyle(el).visibility !== 'hidden');
+                            }
+
+                            function hideRow(row){
+                                if (!row) return;
+                                row.style.display = 'none';
+                            }
+
+                            function collapseEmptyContainer() {
+                                // أقرب حاوية بيضا padded للقسم
+                                var container = nativeHost.querySelector('section, .bg-white, .product-options, .s-form-group, .form-group');
+                                if (!container) container = nativeHost;
+
+                                // هل بقي أي صف خيارات مرئي داخل الحاوية؟
+                                var visibleRows = Array.from(container.querySelectorAll(
+                                '.form-group, .s-form-group, .product-option, [data-option-id], select, input, button'
+                                )).filter(isVisible);
+
+                                if (visibleRows.length === 0) {
+                                container.style.display = 'none';           // اخفِ المربع الأبيض كله
+                                nativeHost.style.display = 'none';          // وأيضًا غطّ الحاوية الجذرية احتياطًا
+                                }
+                            }
+
+                            function hideNativeSizeRow() {
+                                // 1) أخفِ صف المقاس نفسه
+                                var name = 'options[' + SIZE_OPTION_ID + ']';
+                                var input = nativeHost.querySelector('[name="' + name + '"]');
+                                if (input) {
+                                input.disabled = true;
+                                hideRow(input.closest('.form-group, .s-form-group, .product-option, section, .field, div'));
+                                }
+
+                                // 2) لو الويب-كمبوننت طالع بعنوان/ليبل "المقاس" فقط
+                                nativeHost.querySelectorAll('label, .form-label, [class*="label"], [class*="title"]').forEach(function (lb) {
+                                var txt = (lb.textContent || '').trim().toLowerCase();
+                                if (txt.includes('المقاس') || txt.includes('size')) {
+                                    hideRow(lb.closest('.form-group, .s-form-group, .product-option, section, .field, div'));
+                                }
+                                });
+
+                                // 3) لو ما بقى أي خيار مرئي، اخفِ الحاوية البيضاء كلها
+                                collapseEmptyContainer();
+                            }
+
+                            // نفّذ الآن وراقب أي إعادة رسم لاحقة من عنصر سلة
+                            hideNativeSizeRow();
+                            new MutationObserver(hideNativeSizeRow).observe(nativeHost, { childList: true, subtree: true });
+                            })();
+                            </script>
+
                         </div>
 
-                    </div> {# /buy-area #}
+                    </div> 
+                    
+                    {# /buy-area #}
+                    <section class="bg-white rounded-md rounded-b-none">
+                    {# Check in Store على اليمين #}
+                    <div class="text-sm text-gray-700 hover:underline inline-flex items-center gap-1">
+                        <a href="#!"
+                        class="text-sm text-gray-700 hover:underline inline-flex items-center gap-1"
+                        onclick="salla.event.dispatch('scopes::open', {mode: 'availability', product_id: '{{ product.id }}'})">
+                        Check in Store 
+                        </a>
+                    </div>
 
-
-                    {% hook 'product:single.form.end' %}
-
-                    <section class="flex bg-white p-5 sm:pb-0 rounded-md rounded-b-none">
-                        <div class="center-between w-full">
-                            <label class="form-label">
-                                <b class="block">
-                                    {{ trans('pages.products.price') }}
-                                </b>
-                            </label>
-
-                            <div class="flex whitespace-nowrap price-wrapper gap-4 items-center">
-                              <div class="{{ product.is_on_sale ? '' : 'hidden' }} price_is_on_sale space-x-2 rtl:space-x-reverse whitespace-nowrap">
-                                <h2 class="total-price text-red-800 font-bold text-xl inline-block">{{product.sale_price|money}}</h2>
-                                <span class="before-price text-gray-500 line-through">{{product.regular_price|money}}</span>
-                              </div>
-                              <div class="starting-or-normal-price gap-4 {{ product.is_on_sale ? 'hidden' : 'flex' }}">
-                                {% if product.starting_price %} 
-                                  <span class="starting-price-title">{{ trans('pages.products.starting_price') }}</span>
-                                {% endif %} 
-                                <h2 class="total-price font-bold text-xl inline-block"> {{product.starting_price ? product.starting_price|money : product.price|money }}</h2>
-                              </div>
-                            </div>
-
-                            <div class="out-of-stock min-h-7 leading-7 hidden text-base text-red-600 !opacity-50 font-bold">{{ trans('pages.products.out_of_stock')}}</div>
-                        </div>
+                    {# زر أسود ثابت يرسل الفورم #}
+                    <button type="submit"
+                            class="mt-4 w-full h-14 rounded-xl bg-black text-white font-bold tracking-wide
+                                    transition-colors hover:bg-[#111] focus:outline-none focus:ring-2 focus:ring-black">
+                        ADD TO CART
+                    </button>
                     </section>
-                    {# Pre-order Campaign #}
-                    {% if product.has_preorder_campaign %}
-                        <section class="mt-5 p-5">
-                            <salla-count-down pre-order='{{ product.preorder|json_encode}}' boxed labeled></salla-count-down>
-                        </section>
-                    {% endif %}
 
-                    <section class="sticky-product-bar bg-white p-5 rounded-md rounded-b-none">
-                        {# Add to cart #}
-                        <salla-add-product-button
-                                {{product.can_quick_buy ? 'quick-buy' : ''}}
-                                {{theme.settings.get('sticky_add_to_cart') ? ' support-sticky-bar' : ''}}
-                                {{product.is_require_shipping ? 'required-shipping' : ''}}
-                                {{product.has_preorder_campaign ? 'has-pre-order' : ''}}
-                                amount="{{ product.base_currency_price }}"
-                                class="mt-5 w-full sticky-product-bar__btn"
-                                product-status="{{ product.status }}"
-                                product-type="{{ product.type }}"
-                                product-id="{{ product.id }}"
-                                loader-position="end"
-                                type="submit"
-                                width="wide"
-                                {# Notify availability props#}
-                                {% if product.notify_availability %}
-                                    {{ product.notify_availability.subscribed ? 'is-subscribed' : '' }}
-                                    channels="{{ product.notify_availability.channels|join(',') }}"
-                                    subscribed-options="{{ product.notify_availability.subscribed_options|json_encode }}"
-                                    {{ product.notify_availability.options ? 'notify-options-availability' : '' }}
-                                {% endif %}>
-
-                            {{ product.add_to_cart_label }}
-                        </salla-add-product-button>
-                    </section>
-                    {% if product.is_giftable %}
+                    {#{% if product.is_giftable %}
                         <salla-gifting class="mt-5" widget-subtitle="{{ gifting_intro }}" product-id="{{ product.id }}" {{ product.is_require_shipping ? 'physical-products' : ''  }}></salla-gifting>
-                    {% endif %}
+                    {% endif %}#}
                 </form>
 
 
@@ -342,7 +543,7 @@
 
 
 
-                {% if product.tags|length and theme.settings.get('show_tags', true) %}
+                {#{% if product.tags|length and theme.settings.get('show_tags', true) %}
                     <div class="mb-3">
                         {% for tag in product.tags %}
                             <a href="{{ tag.url }}"
@@ -383,10 +584,10 @@
                 {% endif %}
                 {% hook 'product:single.description' %}
 
-                {# Installment Methods #}
+                {# Installment Methods 
                 <salla-installment price="{{ product.price }}"></salla-installment>
                 {% if product.has_metadata %}
-                <salla-metadata></salla-metadata>
+                    <salla-metadata></salla-metadata>
                 {% endif %}
 
                 {% if product.show_availability %}
@@ -412,7 +613,7 @@
 
 
                 {% hook 'product:single.description.end' %}
-                <salla-quick-order class="mt-5 md:-mb-2 block"></salla-quick-order>
+                <salla-quick-order class="mt-5 md:-mb-2 block"></salla-quick-order>#}
             </div>
             
             <div class="sidebar md:sticky top-24 w-full md:!w-2/4 rtl:ml-8 ltr:mr-8 pb-8 md:pb-16 overflow-hidden shrink-0">
