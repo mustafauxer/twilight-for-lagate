@@ -234,17 +234,24 @@
 
 {# ===== Size pills ===== #}
 <div class="mt-6">
-  <div class="mb-3 flex items-center justify-between">
+  <div id="size-header" class="mb-3 flex items-center justify-between">
     <p class="text-sm font-semibold text-gray-800">
       {{ trans('pages.products.size_options')|default('Size Options') }}
     </p>
     {% set find_lbl = trans('pages.products.find_my_size')|default('Find My Size') %}
     {% if product.has_size_guide %}
-      <a href="#!" onclick="salla?.event?.dispatch?.('size-guide::open','{{ product.id }}')" class="text-sm text-gray-400 hover:text-gray-700 inline-flex items-center gap-1">
-        {{ find_lbl }} <span class="sicon-keyboard_arrow_right text-[14px]"></span>
+      <a href="#!"
+        id="find-my-size"
+        class="inline-flex items-center gap-1"
+        onclick="salla?.event?.dispatch?.('size-guide::open','{{ product.id }}')">
+        {{ find_lbl }}
+        <span class="sicon-keyboard_arrow_right text-[14px]"></span>
       </a>
     {% else %}
-      <span class="text-sm text-gray-300">{{ find_lbl }}</span>
+      <span class="find-my-size-link is-disabled inline-flex items-center gap-1">
+        {{ find_lbl }}
+        <span class="sicon-keyboard_arrow_right text-[14px]"></span>
+      </span>
     {% endif %}
   </div>
 

@@ -208,3 +208,69 @@ salla-quantity-input::part(input){ border-radius: 0 !important; }  /* فالبا
   text-decoration: none;
   cursor: default;
 }
+
+/* نفس إحساس Check in Store + خط سفلي */
+.link-utility{
+  color:#111;
+  text-decoration: underline;
+  font-weight: 500;
+  cursor: pointer;
+}
+.link-utility:hover{
+  color:#000;
+  text-decoration: underline;
+}
+.link-utility .sicon-keyboard_arrow_right{ font-size:14px; line-height:1; }
+
+/* Find My Size like Check in Store (force) */
+#size-header #find-my-size{
+  color:#111 !important;
+  text-decoration: underline !important;
+  font-weight:500;
+  cursor:pointer;
+}
+#size-header #find-my-size:hover{
+  color:#000 !important;
+  text-decoration: underline !important;
+}
+#size-header #find-my-size .sicon-keyboard_arrow_right{
+  font-size:14px; line-height:1;
+}
+
+/* لو نسيت تعديل الـHTML ولسه فيه span رمادية – خلّيها برضه شكل لينك */
+#size-header > span{
+  color:#111 !important;
+  text-decoration: underline !important;
+  font-weight:500 !important;
+  cursor:pointer !important;
+}
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------------*/
+/* قرّب Check in Store من زر إضافة للسلة */
+.pdp-utility-row{ margin-bottom: 0px !important; }
+
+
+/* قلّل المسافة العلوية للزر نفسه (بتغطي mt-3 اللي في الـHTML) */
+.sticky-product-bar__btn{ margin-top: 0px !important; }
+
+
+/*---------------------------------------------------------------------------------------------------------------------------*/
+/* مساحة بسيطة وفصل خفيف تحت زر الشراء */
+.pdp-installments{
+  margin-top: 12px !important;
+  padding-top: 12px;
+  border-top: 1px solid #E5E7EB;
+}
+
+/* لا تدوير إطلاقًا */
+.pdp-installments *,
+salla-installment,
+salla-installment *{
+  border-radius: 0 !important;
+}
+
+@media (min-width: 768px){
+  .pdp-installments{ margin-top: 14px; }
+}
