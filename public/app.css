@@ -1664,13 +1664,13 @@ select{
 .rounded-xl{
     border-radius: 0.75rem;
 }
-.rounded-t-md{
-    border-top-left-radius: 0.375rem;
-    border-top-right-radius: 0.375rem;
-}
 .rounded-b-none{
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
+}
+.rounded-t-md{
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
 }
 .border{
     border-width: 1px;

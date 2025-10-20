@@ -515,35 +515,23 @@
                     </div> 
                     
                     {# /buy-area #}
-                    {# ===== Utility row: Check in Store ===== #}
-                    <div class="pdp-utility-row">
+                    <section class="bg-white rounded-md rounded-b-none">
+                    {# Check in Store على اليمين #}
+                    <div class="text-sm text-gray-700 hover:underline inline-flex items-center gap-1">
                         <a href="#!"
-                            onclick="salla.event.dispatch('scopes::open', {mode: 'availability', product_id: '{{ product.id }}'})">
-                            Check in Store
+                        class="text-sm text-gray-700 hover:underline inline-flex items-center gap-1"
+                        onclick="salla.event.dispatch('scopes::open', {mode: 'availability', product_id: '{{ product.id }}'})">
+                        Check in Store 
                         </a>
-                        <span class="sicon-keyboard_arrow_right text-[14px]"></span>
                     </div>
 
-                    {# ===== زر الإضافة للسلة ===== #}
-                    {# خيار A: لو بتستخدم web-component سلة #}
-                    <salla-add-product-button
-                        class="mt-3 w-full sticky-product-bar__btn s-add-to-cart--black"
-                        product-status="{{ product.status }}"
-                        product-type="{{ product.type }}"
-                        product-id="{{ product.id }}"
-                        loader-position="end"
-                        type="submit"
-                        width="wide">
+                    {# زر أسود ثابت يرسل الفورم #}
+                    <button type="submit"
+                            class="mt-4 w-full h-14 rounded-xl bg-black text-white font-bold tracking-wide
+                                    transition-colors hover:bg-[#111] focus:outline-none focus:ring-2 focus:ring-black">
                         ADD TO CART
-                    </salla-add-product-button>
-
-                    {# خيار B (احتياطي): زر HTML لو عايز تلغي الويب-كمبوننت نهائيًا #}
-                    {#
-                    <button type="submit" class="mt-3 w-full btn-addtocart-black">
-                    ADD TO CART
                     </button>
-                    #}
-
+                    </section>
 
                     {#{% if product.is_giftable %}
                         <salla-gifting class="mt-5" widget-subtitle="{{ gifting_intro }}" product-id="{{ product.id }}" {{ product.is_require_shipping ? 'physical-products' : ''  }}></salla-gifting>
