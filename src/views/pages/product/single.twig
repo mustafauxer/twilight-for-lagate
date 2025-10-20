@@ -86,6 +86,8 @@
     {# Force white background on product page only #}
     <style>
         html, body { background: #fff !important; }
+        #color-swatches img { object-position: center !important; }
+        #color-swatches .swatch img { margin:0 !important; }
     </style>
 
 <style>
@@ -123,6 +125,35 @@
     cursor:not-allowed;           /* بس يبان إنه غير قابل للضغط لو فعلاً غير متاح */
   }
 </style>
+
+
+<style>
+  /* ضبط مظهر ثبات معاينة اللون في single.twig */
+  #color-thumbs .color-thumb{
+    box-sizing: border-box;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background: #fff;
+    padding: 3px;                /* مساحة عازلة تمنع “الأكل” */
+    overflow: hidden;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+  }
+  #color-thumbs .color-thumb img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center; /* وسط تمام */
+    margin: 0;
+  }
+  #color-thumbs .color-thumb.is-active{
+    border-color: #000;           /* إطار أسود واضح */
+  }
+</style>
+
+
+
 
 
 
@@ -223,93 +254,91 @@
 
                     {# === LTR wrapper: كل حاجة من الشمال لليمين داخل الفورم === #}
                     <div id="buy-area" dir="ltr" class="space-y-6 text-left">
-{# ========== Selected Color (واحدة لكل لون) ========== #}
-{% set _label_try = trans('pages.products.selected_color') %}
-{% set selected_color_label = _label_try == 'pages.products.selected_color' ? 'Selected Color' : _label_try %}
+                        {# ========== Selected Color (واحدة لكل لون) ========== #}
+                        {% set _label_try = trans('pages.products.selected_color') %}
+                        {% set selected_color_label = _label_try == 'pages.products.selected_color' ? 'Selected Color' : _label_try %}
 
-{# كوّن لستة صور تمثل الألوان: أول صورة لكل alt مميّز #}
-{% set color_thumbs = [] %}
-{% set _seen = [] %}
-{% for img in product.images %}
-  {% set alt = (img.alt|default('')|trim) %}
-  {% if alt is not empty and (alt|lower) not in _seen %}
-    {% set color_thumbs = color_thumbs|merge([{ 'alt': alt, 'url': img.url, 'index': loop.index0 }]) %}
-    {% set _seen = _seen|merge([alt|lower]) %}
-  {% endif %}
-{% endfor %}
+                        {# كوّن لستة صور تمثل الألوان: أول صورة لكل alt مميّز #}
+                        {% set color_thumbs = [] %}
+                        {% set _seen = [] %}
+                        {% for img in product.images %}
+                        {% set alt = (img.alt|default('')|trim) %}
+                        {% if alt is not empty and (alt|lower) not in _seen %}
+                            {% set color_thumbs = color_thumbs|merge([{ 'alt': alt, 'url': img.url, 'index': loop.index0 }]) %}
+                            {% set _seen = _seen|merge([alt|lower]) %}
+                        {% endif %}
+                        {% endfor %}
 
-<div id="selected-color-section" class="mt-0">
-  <p class="mb-3 text-sm font-semibold text-gray-800">
-    {{ selected_color_label }}:
-    <span id="selected-color-name" class="font-normal">
-      {{ color_thumbs|length ? color_thumbs[0].alt : '—' }}
-    </span>
-  </p>
+                        <div id="selected-color-section" class="mt-0">
+                            <p class="mb-3 text-sm font-semibold text-gray-800">
+                                {{ selected_color_label }}:
+                                <span id="selected-color-name" class="font-normal">
+                                {{ color_thumbs|length ? color_thumbs[0].alt : '—' }}
+                                </span>
+                            </p>
 
-  <div id="color-thumbs"
-       class="mt-3 grid grid-cols-4 sm:grid-cols-6 gap-3 justify-start justify-items-start">
-    {% for c in color_thumbs %}
-      <button
-        type="button"
-        class="color-thumb block w-full aspect-[3/4] overflow-hidden rounded-xl ring-2 ring-transparent hover:ring-gray-400 transition"
-        data-slide="{{ c.index }}"
-        data-label="{{ c.alt|e('js') }}">
-        <img src="{{ c.url }}" alt="{{ c.alt|default(product.name) }}" class="w-full h-full object-cover" />
-      </button>
-    {% endfor %}
-  </div>
-</div>
+                            <div id="color-thumbs"
+                                class="mt-3 grid grid-cols-4 sm:grid-cols-6 gap-3 justify-start justify-items-start">
+                                {% for c in color_thumbs %}
+                                <button
+                                    type="button"
+                                    class="color-thumb block w-full aspect-[3/4] overflow-hidden rounded-xl transition"
+                                    data-slide="{{ c.index }}"
+                                    data-label="{{ c.alt|e('js') }}">
+                                    <img src="{{ c.url }}" alt="{{ c.alt|default(product.name) }}" class="w-full h-full object-cover" />
+                                </button>
+                                {% endfor %}
+                            </div>
+                        </div>
 
-<script>
-(function(){
-  var grid  = document.getElementById('color-thumbs');
-  var nameEl= document.getElementById('selected-color-name');
+                        <script>
+                            (function(){
+                            var grid  = document.getElementById('color-thumbs');
+                            var nameEl= document.getElementById('selected-color-name');
 
-  if(!grid) return;
+                            if(!grid) return;
+                            function setActive(btn){
+                            grid.querySelectorAll('.color-thumb').forEach(function(b){
+                                b.classList.remove('is-active');
+                            });
+                            btn.classList.add('is-active');
+                            }
 
-  function setActive(btn){
-    grid.querySelectorAll('.color-thumb').forEach(function(b){
-      b.classList.remove('ring-black');
-      b.classList.add('ring-transparent');
-    });
-    btn.classList.remove('ring-transparent');
-    btn.classList.add('ring-black'); // الإطار الأسود
-  }
 
-  // علّم أول عنصر كبداية
-  var first = grid.querySelector('.color-thumb');
-  if(first) setActive(first);
+                            // علّم أول عنصر كبداية
+                            var first = grid.querySelector('.color-thumb');
+                            if(first) setActive(first);
 
-  grid.addEventListener('click', function(e){
-    var btn = e.target.closest('.color-thumb');
-    if(!btn) return;
+                            grid.addEventListener('click', function(e){
+                                var btn = e.target.closest('.color-thumb');
+                                if(!btn) return;
 
-    setActive(btn);
+                                setActive(btn);
 
-    // حدّث اسم اللون
-    var label = btn.getAttribute('data-label') || '—';
-    if (nameEl) nameEl.textContent = label;
+                                // حدّث اسم اللون
+                                var label = btn.getAttribute('data-label') || '—';
+                                if (nameEl) nameEl.textContent = label;
 
-    // حرّك سلايدر الصور الرئيسية لنفس الفهرس
-    var i = parseInt(btn.getAttribute('data-slide'), 10) || 0;
-    var slider = document.getElementById('details-slider-{{ product.id }}');
-    if (!slider) return;
+                                // حرّك سلايدر الصور الرئيسية لنفس الفهرس
+                                var i = parseInt(btn.getAttribute('data-slide'), 10) || 0;
+                                var slider = document.getElementById('details-slider-{{ product.id }}');
+                                if (!slider) return;
 
-    // لو Swiper موجود
-    var swiperEl = slider.querySelector('.swiper');
-    if (swiperEl && swiperEl.swiper && typeof swiperEl.swiper.slideTo === 'function') {
-      swiperEl.swiper.slideTo(i);
-      return;
-    }
+                                // لو Swiper موجود
+                                var swiperEl = slider.querySelector('.swiper');
+                                if (swiperEl && swiperEl.swiper && typeof swiperEl.swiper.slideTo === 'function') {
+                                swiperEl.swiper.slideTo(i);
+                                return;
+                                }
 
-    // فالباك: اضغط thumbnail المقابل في slot="thumbs"
-    var thumbsHost = slider.querySelector('[slot="thumbs"]');
-    if (thumbsHost && thumbsHost.children && thumbsHost.children[i]) {
-      thumbsHost.children[i].dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    }
-  });
-})();
-</script>
+                                // فالباك: اضغط thumbnail المقابل في slot="thumbs"
+                                var thumbsHost = slider.querySelector('[slot="thumbs"]');
+                                if (thumbsHost && thumbsHost.children && thumbsHost.children[i]) {
+                                thumbsHost.children[i].dispatchEvent(new MouseEvent('click', { bubbles: true }));
+                                }
+                            });
+                            })();
+                        </script>
 
 
                         {# --- Quantity تحت Selected Color ومحاذي شمال --- #}
@@ -468,87 +497,87 @@
 
 
                             <script>
-                            (function () {
-                            // عدّل الرقم لو تغيّر ID خيار المقاس عندك
-                            var SIZE_OPTION_ID = 750237441;
+                                (function () {
+                                // عدّل الرقم لو تغيّر ID خيار المقاس عندك
+                                var SIZE_OPTION_ID = 750237441;
 
-                            var host = document.getElementById('native-options');
-                            if (!host) return;
+                                var host = document.getElementById('native-options');
+                                if (!host) return;
 
-                            function hideNativeSizeRow() {
-                                var input = host.querySelector('[name="options[' + SIZE_OPTION_ID + ']"]');
-                                if (!input) return;
-                                // عشان ما يتبعتش مرتين
-                                input.disabled = true;
+                                function hideNativeSizeRow() {
+                                    var input = host.querySelector('[name="options[' + SIZE_OPTION_ID + ']"]');
+                                    if (!input) return;
+                                    // عشان ما يتبعتش مرتين
+                                    input.disabled = true;
 
-                                // اخفي السطر كله (اللي فيه اللابل "المقاس" وحقل الاختيار)
-                                var row = input.closest('.form-group, .s-form-group, .product-option, section, .field, div');
-                                if (row) row.style.display = 'none';
-                            }
+                                    // اخفي السطر كله (اللي فيه اللابل "المقاس" وحقل الاختيار)
+                                    var row = input.closest('.form-group, .s-form-group, .product-option, section, .field, div');
+                                    if (row) row.style.display = 'none';
+                                }
 
-                            // جرّب فورًا، وبعدين راقب أي تحديث من Web Component
-                            hideNativeSizeRow();
-                            new MutationObserver(hideNativeSizeRow).observe(host, { childList: true, subtree: true });
-                            })();
+                                // جرّب فورًا، وبعدين راقب أي تحديث من Web Component
+                                hideNativeSizeRow();
+                                new MutationObserver(hideNativeSizeRow).observe(host, { childList: true, subtree: true });
+                                })();
                             </script>
                             
                             {# لاخفاء اختر المقاس الاصلي #} 
                             <script>
-                            (function () {
-                            var SIZE_OPTION_ID = 750237441; // عدّلها لو ID المقاس مختلف
-                            var nativeHost = document.getElementById('native-options');
-                            if (!nativeHost) return;
+                                (function () {
+                                var SIZE_OPTION_ID = 750237441; // عدّلها لو ID المقاس مختلف
+                                var nativeHost = document.getElementById('native-options');
+                                if (!nativeHost) return;
 
-                            function isVisible(el){
-                                return !!(el && el.offsetParent !== null && getComputedStyle(el).display !== 'none' && getComputedStyle(el).visibility !== 'hidden');
-                            }
-
-                            function hideRow(row){
-                                if (!row) return;
-                                row.style.display = 'none';
-                            }
-
-                            function collapseEmptyContainer() {
-                                // أقرب حاوية بيضا padded للقسم
-                                var container = nativeHost.querySelector('section, .bg-white, .product-options, .s-form-group, .form-group');
-                                if (!container) container = nativeHost;
-
-                                // هل بقي أي صف خيارات مرئي داخل الحاوية؟
-                                var visibleRows = Array.from(container.querySelectorAll(
-                                '.form-group, .s-form-group, .product-option, [data-option-id], select, input, button'
-                                )).filter(isVisible);
-
-                                if (visibleRows.length === 0) {
-                                container.style.display = 'none';           // اخفِ المربع الأبيض كله
-                                nativeHost.style.display = 'none';          // وأيضًا غطّ الحاوية الجذرية احتياطًا
-                                }
-                            }
-
-                            function hideNativeSizeRow() {
-                                // 1) أخفِ صف المقاس نفسه
-                                var name = 'options[' + SIZE_OPTION_ID + ']';
-                                var input = nativeHost.querySelector('[name="' + name + '"]');
-                                if (input) {
-                                input.disabled = true;
-                                hideRow(input.closest('.form-group, .s-form-group, .product-option, section, .field, div'));
+                                function isVisible(el){
+                                    return !!(el && el.offsetParent !== null && getComputedStyle(el).display !== 'none' && getComputedStyle(el).visibility !== 'hidden');
                                 }
 
-                                // 2) لو الويب-كمبوننت طالع بعنوان/ليبل "المقاس" فقط
-                                nativeHost.querySelectorAll('label, .form-label, [class*="label"], [class*="title"]').forEach(function (lb) {
-                                var txt = (lb.textContent || '').trim().toLowerCase();
-                                if (txt.includes('المقاس') || txt.includes('size')) {
-                                    hideRow(lb.closest('.form-group, .s-form-group, .product-option, section, .field, div'));
+                                function hideRow(row){
+                                    if (!row) return;
+                                    row.style.display = 'none';
                                 }
-                                });
 
-                                // 3) لو ما بقى أي خيار مرئي، اخفِ الحاوية البيضاء كلها
-                                collapseEmptyContainer();
-                            }
+                                function collapseEmptyContainer() {
+                                    // أقرب حاوية بيضا padded للقسم
+                                    var container = nativeHost.querySelector('section, .bg-white, .product-options, .s-form-group, .form-group');
+                                    if (!container) container = nativeHost;
 
-                            // نفّذ الآن وراقب أي إعادة رسم لاحقة من عنصر سلة
-                            hideNativeSizeRow();
-                            new MutationObserver(hideNativeSizeRow).observe(nativeHost, { childList: true, subtree: true });
-                            })();
+                                    // هل بقي أي صف خيارات مرئي داخل الحاوية؟
+                                    var visibleRows = Array.from(container.querySelectorAll(
+                                    '.form-group, .s-form-group, .product-option, [data-option-id], select, input, button'
+                                    )).filter(isVisible);
+
+                                    if (visibleRows.length === 0) {
+                                    container.style.display = 'none';           // اخفِ المربع الأبيض كله
+                                    nativeHost.style.display = 'none';          // وأيضًا غطّ الحاوية الجذرية احتياطًا
+                                    }
+                                }
+
+                                function hideNativeSizeRow() {
+                                    // 1) أخفِ صف المقاس نفسه
+                                    var name = 'options[' + SIZE_OPTION_ID + ']';
+                                    var input = nativeHost.querySelector('[name="' + name + '"]');
+                                    if (input) {
+                                    input.disabled = true;
+                                    hideRow(input.closest('.form-group, .s-form-group, .product-option, section, .field, div'));
+                                    }
+
+                                    // 2) لو الويب-كمبوننت طالع بعنوان/ليبل "المقاس" فقط
+                                    nativeHost.querySelectorAll('label, .form-label, [class*="label"], [class*="title"]').forEach(function (lb) {
+                                    var txt = (lb.textContent || '').trim().toLowerCase();
+                                    if (txt.includes('المقاس') || txt.includes('size')) {
+                                        hideRow(lb.closest('.form-group, .s-form-group, .product-option, section, .field, div'));
+                                    }
+                                    });
+
+                                    // 3) لو ما بقى أي خيار مرئي، اخفِ الحاوية البيضاء كلها
+                                    collapseEmptyContainer();
+                                }
+
+                                // نفّذ الآن وراقب أي إعادة رسم لاحقة من عنصر سلة
+                                hideNativeSizeRow();
+                                new MutationObserver(hideNativeSizeRow).observe(nativeHost, { childList: true, subtree: true });
+                                })();
                             </script>
 
                         </div>
@@ -566,17 +595,27 @@
                     </div>
 
                     {# ===== زر الإضافة للسلة ===== #}
-                    {# خيار A: لو بتستخدم web-component سلة #}
-                    <salla-add-product-button
-                        class="mt-3 w-full sticky-product-bar__btn s-add-to-cart--black"
-                        product-status="{{ product.status }}"
-                        product-type="{{ product.type }}"
-                        product-id="{{ product.id }}"
-                        loader-position="end"
-                        type="submit"
-                        width="wide">
-                        ADD TO CART
-                    </salla-add-product-button>
+                    {# ضع كلاس التخطيط على غلاف خارجي بدل الزر نفسه #}
+                    <div class="mt-3 w-full sticky-product-bar__btn">
+                        <salla-add-product-button
+                            class="s-add-to-cart--black"
+                            product-status="{{ product.status }}"
+                            product-type="{{ product.type }}"
+                            product-id="{{ product.id }}"
+                            loader-position="end"
+                            type="submit"
+                            width="wide">
+                            ADD TO CART
+                        </salla-add-product-button>
+                    </div>
+
+                    {# يدجِت التقسيط/الدفع الآجل — غالبًا تبع Tabby وTamara #}
+                    <salla-installment price="{{ product.price }}"></salla-installment>
+                    <style>
+                        salla-installment { display: none !important; }
+                    </style>          
+
+
 
                     {# خيار B (احتياطي): زر HTML لو عايز تلغي الويب-كمبوننت نهائيًا #}
                     {#

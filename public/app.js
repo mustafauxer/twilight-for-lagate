@@ -7445,509 +7445,13 @@ var AppHelpers = /*#__PURE__*/function () {
 
 /***/ }),
 
-/***/ "./src/assets/js/base-page.js":
-/*!************************************!*\
-  !*** ./src/assets/js/base-page.js ***!
-  \************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/createClass.js");
-
-
-var BasePage = /*#__PURE__*/function () {
-  function BasePage() {
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, BasePage);
-  }
-  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(BasePage, [{
-    key: "onReady",
-    value: function onReady() {
-      //
-    }
-  }, {
-    key: "registerEvents",
-    value: function registerEvents() {
-      //
-    }
-
-    /**
-     * To avoid loading unwanted classes, unless it's wanted page
-     * @param {null|string[]} allowedPages
-     * @return {*}
-     */
-  }, {
-    key: "initiate",
-    value: function initiate(allowedPages) {
-      if (allowedPages && !allowedPages.includes(salla.config.get('page.slug'))) {
-        return app.log("The Class For (".concat(allowedPages.join(','), ") Skipped."));
-      }
-      this.onReady();
-      this.registerEvents();
-      app.log("The Class For (".concat((allowedPages === null || allowedPages === void 0 ? void 0 : allowedPages.join(',')) || '*', ") Loaded\uD83C\uDF89"));
-    }
-  }]);
-}();
-/**
- * Because we merged multi classes into one file, there is no need to initiate all of them
- */
-BasePage.initiateWhenReady = function () {
-  var _window$app,
-    _this = this;
-  var allowedPages = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-  if (((_window$app = window.app) === null || _window$app === void 0 ? void 0 : _window$app.status) === 'ready') {
-    new this().initiate(allowedPages);
-  } else {
-    document.addEventListener('theme::ready', function () {
-      return new _this().initiate(allowedPages);
-    });
-  }
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BasePage);
-
-/***/ }),
-
-/***/ "./src/assets/js/partials/anime.js":
-/*!*****************************************!*\
-  !*** ./src/assets/js/partials/anime.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/createClass.js");
-/* harmony import */ var animejs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! animejs */ "./node_modules/.pnpm/animejs@3.2.2/node_modules/animejs/lib/anime.es.js");
-
-
-
-window.anime = animejs__WEBPACK_IMPORTED_MODULE_2__["default"];
-var Anime = /*#__PURE__*/function () {
-  function Anime(selector, options) {
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, Anime);
-    this.options = {
-      targets: selector,
-      opacity: [0, 1],
-      delay: function delay(el, i) {
-        return i * 100;
-      },
-      duration: 2000
-    };
-    this.setOptions(options);
-  }
-
-  /**
-   * @param options
-   * @return {Anime}
-   */
-  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(Anime, [{
-    key: "setOptions",
-    value: function setOptions(options) {
-      this.options = Object.assign(this.options, options || {});
-      return this;
-    }
-
-    /**
-     * @param duration
-     * @return {Anime}
-     */
-  }, {
-    key: "duration",
-    value: function duration(_duration) {
-      return this.set('duration', _duration);
-    }
-
-    /**
-     * @param opacity
-     * @return {Anime}
-     */
-  }, {
-    key: "opacity",
-    value: function opacity(_opacity) {
-      return this.set('opacity', _opacity);
-    }
-
-    /**
-     * @param delay
-     * @return {Anime}
-     */
-  }, {
-    key: "delay",
-    value: function delay(_delay) {
-      return this.set('delay', _delay);
-    }
-
-    /**
-     * @param scale
-     * @return {Anime}
-     */
-  }, {
-    key: "scale",
-    value: function scale(_scale) {
-      return this.set('scale', _scale);
-    }
-
-    /**
-     * @param translateY
-     * @return {Anime}
-     */
-  }, {
-    key: "translateY",
-    value: function translateY(_translateY) {
-      return this.set('translateY', _translateY);
-    }
-
-    /**
-     * @param translateX
-     * @return {Anime}
-     */
-  }, {
-    key: "translateX",
-    value: function translateX(_translateX) {
-      return this.set('translateX', _translateX);
-    }
-
-    /**
-     * @param height
-     * @return {Anime}
-     */
-  }, {
-    key: "height",
-    value: function height(_height) {
-      return this.set('height', _height);
-    }
-
-    /**
-     * @param margin
-     * @return {Anime}
-     */
-  }, {
-    key: "margin",
-    value: function margin(_margin) {
-      return this.set('margin', _margin);
-    }
-
-    /**
-     * @param easing
-     * @return {Anime}
-     */
-  }, {
-    key: "easing",
-    value: function easing(_easing) {
-      return this.set('easing', _easing);
-    }
-
-    /**
-     * @param complete
-     * @return {Anime}
-     */
-  }, {
-    key: "complete",
-    value: function complete(_complete) {
-      return this.set('complete', _complete);
-    }
-
-    /**
-     * @param key
-     * @param value
-     * @return {Anime}
-     */
-  }, {
-    key: "set",
-    value: function set(key, value) {
-      this.options[key] = value;
-      return this;
-    }
-
-    /**
-     * @param number
-     * @return {Anime}
-     */
-  }, {
-    key: "stagger",
-    value: function stagger(number) {
-      this.delay = animejs__WEBPACK_IMPORTED_MODULE_2__["default"].stagger(number);
-      return this;
-    }
-
-    /**
-     * @param padding
-     * @return {Anime}
-     */
-  }, {
-    key: "paddingBottom",
-    value: function paddingBottom(padding) {
-      return this.set('padding-bottom', padding);
-    }
-
-    /**
-     * @param padding
-     * @return {Anime}
-     */
-  }, {
-    key: "paddingTop",
-    value: function paddingTop(padding) {
-      return this.set('padding-top', padding);
-    }
-
-    /**
-     * @return {{}}
-     */
-  }, {
-    key: "play",
-    value: function play() {
-      return (0,animejs__WEBPACK_IMPORTED_MODULE_2__["default"])(this.options);
-    }
-  }]);
-}();
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Anime);
-
-/***/ }),
-
-/***/ "./src/assets/js/partials/tooltip.js":
-/*!*******************************************!*\
-  !*** ./src/assets/js/partials/tooltip.js ***!
-  \*******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ toolTip)
-/* harmony export */ });
-function toolTip() {
-  var tooltipToggleClick = document.querySelectorAll('.tooltip-toggle--clickable'),
-    tooltipToggleHover = document.querySelectorAll('.tooltip-toggle--hover'),
-    closeTooltip = document.querySelectorAll('.close-tooltip');
-  var isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
-  var showTooltip = function showTooltip(element) {
-    element.classList.add('visible');
-  };
-  var hideTooltip = function hideTooltip(element) {
-    element.classList.remove('visible');
-  };
-
-  // Show the tooltip if the type is clickable
-  if (tooltipToggleClick.length) {
-    tooltipToggleClick.forEach(function (element) {
-      element.addEventListener('click', function (e) {
-        e.stopPropagation();
-        showTooltip(element);
-      });
-    });
-  }
-
-  // Show the tooltip if the type is hover or click on touch devices
-  if (tooltipToggleHover.length) {
-    tooltipToggleHover.forEach(function (element) {
-      if (isTouchDevice) {
-        element.addEventListener('click', function (e) {
-          e.stopPropagation();
-          showTooltip(element);
-        });
-      } else {
-        element.addEventListener('mouseenter', function () {
-          showTooltip(element);
-        });
-        element.addEventListener('mouseleave', function () {
-          hideTooltip(element);
-        });
-      }
-    });
-  }
-
-  // Hide the tooltip when the close button is clicked
-  if (closeTooltip.length) {
-    closeTooltip.forEach(function (element) {
-      element.addEventListener('click', function (e) {
-        e.stopPropagation();
-        hideTooltip(element.parentElement.parentElement);
-      });
-    });
-  }
-
-  // Hide the tooltip on window click
-  window.addEventListener('click', function () {
-    tooltipToggleClick.forEach(function (element) {
-      hideTooltip(element);
-    });
-    tooltipToggleHover.forEach(function (element) {
-      hideTooltip(element);
-    });
-  });
-}
-
-/***/ })
-
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/************************************************************************/
-var __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
-(() => {
-"use strict";
-var __webpack_exports__ = {};
-/*!************************************!*\
-  !*** ./src/assets/styles/app.scss ***!
-  \************************************/
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
-
-})();
-
-// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
-(() => {
-"use strict";
-var __webpack_exports__ = {};
-/*!***********************************!*\
-  !*** ./src/assets/js/wishlist.js ***!
-  \***********************************/
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/createClass.js");
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/inherits.js");
-/* harmony import */ var _base_page__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./base-page */ "./src/assets/js/base-page.js");
-
-
-
-
-
-function _callSuper(t, o, e) { return o = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(o), (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__["default"])(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(t).constructor) : o.apply(t, e)); }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-
-var Wishlist = /*#__PURE__*/function (_BasePage) {
-  function Wishlist() {
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, Wishlist);
-    return _callSuper(this, Wishlist, arguments);
-  }
-  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(Wishlist, _BasePage);
-  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(Wishlist, [{
-    key: "onReady",
-    value: function onReady() {
-      var _this = this;
-      // init wishlist icons in product cards
-      salla.storage.get('salla::wishlist', []).forEach(function (id) {
-        return _this.toggleFavoriteIcon(id);
-      });
-    }
-  }, {
-    key: "registerEvents",
-    value: function registerEvents() {
-      var _this2 = this;
-      salla.wishlist.event.onAdded(function (event, id) {
-        return _this2.toggleFavoriteIcon(id);
-      });
-      salla.wishlist.event.onRemoved(function (response, id) {
-        _this2.toggleFavoriteIcon(id, false);
-
-        // just an animation when the item removed from wishlist page
-        var item = document.querySelector('#wishlist-product-' + id);
-        if (!item) {
-          return;
-        }
-        app.anime(item, false).height(0) // -> from 'height' to '0',
-        .opacity(0).easing('easeInOutQuad').duration(300).complete(function () {
-          return item.remove() || document.querySelector('#wishlist>*') || window.location.reload();
-        }).play();
-      });
-    }
-  }, {
-    key: "toggleFavoriteIcon",
-    value: function toggleFavoriteIcon(id) {
-      var isAdded = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-      document.querySelectorAll('.btn--wishlist[data-id="' + id + '"]').forEach(function (btn) {
-        app.toggleElementClassIf(btn, 'is-added', 'not-added', function () {
-          return isAdded;
-        });
-        // app.toggleElementClassIf(btn, 'pulse', 'un-favorited', () => isAdded);
-      });
-    }
-  }]);
-}(_base_page__WEBPACK_IMPORTED_MODULE_5__["default"]);
-Wishlist.initiateWhenReady();
-})();
-
-// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
-(() => {
-"use strict";
-var __webpack_exports__ = {};
+/***/ "./src/assets/js/app.js":
 /*!******************************!*\
   !*** ./src/assets/js/app.js ***!
   \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/typeof.js");
 /* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
@@ -8334,14 +7838,82 @@ var App = /*#__PURE__*/function (_AppHelpers) {
 salla.onReady(function () {
   return new App().loadTheApp();
 });
-})();
 
-// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
-(() => {
+/***/ }),
+
+/***/ "./src/assets/js/base-page.js":
+/*!************************************!*\
+  !*** ./src/assets/js/base-page.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
 "use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/createClass.js");
+
+
+var BasePage = /*#__PURE__*/function () {
+  function BasePage() {
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, BasePage);
+  }
+  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(BasePage, [{
+    key: "onReady",
+    value: function onReady() {
+      //
+    }
+  }, {
+    key: "registerEvents",
+    value: function registerEvents() {
+      //
+    }
+
+    /**
+     * To avoid loading unwanted classes, unless it's wanted page
+     * @param {null|string[]} allowedPages
+     * @return {*}
+     */
+  }, {
+    key: "initiate",
+    value: function initiate(allowedPages) {
+      if (allowedPages && !allowedPages.includes(salla.config.get('page.slug'))) {
+        return app.log("The Class For (".concat(allowedPages.join(','), ") Skipped."));
+      }
+      this.onReady();
+      this.registerEvents();
+      app.log("The Class For (".concat((allowedPages === null || allowedPages === void 0 ? void 0 : allowedPages.join(',')) || '*', ") Loaded\uD83C\uDF89"));
+    }
+  }]);
+}();
+/**
+ * Because we merged multi classes into one file, there is no need to initiate all of them
+ */
+BasePage.initiateWhenReady = function () {
+  var _window$app,
+    _this = this;
+  var allowedPages = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+  if (((_window$app = window.app) === null || _window$app === void 0 ? void 0 : _window$app.status) === 'ready') {
+    new this().initiate(allowedPages);
+  } else {
+    document.addEventListener('theme::ready', function () {
+      return new _this().initiate(allowedPages);
+    });
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BasePage);
+
+/***/ }),
+
+/***/ "./src/assets/js/blog.js":
 /*!*******************************!*\
   !*** ./src/assets/js/blog.js ***!
   \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/toConsumableArray.js");
 /* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
@@ -8477,8 +8049,446 @@ var Blog = /*#__PURE__*/function (_BasePage) {
   }]);
 }(_base_page__WEBPACK_IMPORTED_MODULE_8__["default"]);
 Blog.initiateWhenReady(['blog.single', 'blog.index']);
-})();
 
+/***/ }),
+
+/***/ "./src/assets/js/partials/anime.js":
+/*!*****************************************!*\
+  !*** ./src/assets/js/partials/anime.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var animejs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! animejs */ "./node_modules/.pnpm/animejs@3.2.2/node_modules/animejs/lib/anime.es.js");
+
+
+
+window.anime = animejs__WEBPACK_IMPORTED_MODULE_2__["default"];
+var Anime = /*#__PURE__*/function () {
+  function Anime(selector, options) {
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, Anime);
+    this.options = {
+      targets: selector,
+      opacity: [0, 1],
+      delay: function delay(el, i) {
+        return i * 100;
+      },
+      duration: 2000
+    };
+    this.setOptions(options);
+  }
+
+  /**
+   * @param options
+   * @return {Anime}
+   */
+  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(Anime, [{
+    key: "setOptions",
+    value: function setOptions(options) {
+      this.options = Object.assign(this.options, options || {});
+      return this;
+    }
+
+    /**
+     * @param duration
+     * @return {Anime}
+     */
+  }, {
+    key: "duration",
+    value: function duration(_duration) {
+      return this.set('duration', _duration);
+    }
+
+    /**
+     * @param opacity
+     * @return {Anime}
+     */
+  }, {
+    key: "opacity",
+    value: function opacity(_opacity) {
+      return this.set('opacity', _opacity);
+    }
+
+    /**
+     * @param delay
+     * @return {Anime}
+     */
+  }, {
+    key: "delay",
+    value: function delay(_delay) {
+      return this.set('delay', _delay);
+    }
+
+    /**
+     * @param scale
+     * @return {Anime}
+     */
+  }, {
+    key: "scale",
+    value: function scale(_scale) {
+      return this.set('scale', _scale);
+    }
+
+    /**
+     * @param translateY
+     * @return {Anime}
+     */
+  }, {
+    key: "translateY",
+    value: function translateY(_translateY) {
+      return this.set('translateY', _translateY);
+    }
+
+    /**
+     * @param translateX
+     * @return {Anime}
+     */
+  }, {
+    key: "translateX",
+    value: function translateX(_translateX) {
+      return this.set('translateX', _translateX);
+    }
+
+    /**
+     * @param height
+     * @return {Anime}
+     */
+  }, {
+    key: "height",
+    value: function height(_height) {
+      return this.set('height', _height);
+    }
+
+    /**
+     * @param margin
+     * @return {Anime}
+     */
+  }, {
+    key: "margin",
+    value: function margin(_margin) {
+      return this.set('margin', _margin);
+    }
+
+    /**
+     * @param easing
+     * @return {Anime}
+     */
+  }, {
+    key: "easing",
+    value: function easing(_easing) {
+      return this.set('easing', _easing);
+    }
+
+    /**
+     * @param complete
+     * @return {Anime}
+     */
+  }, {
+    key: "complete",
+    value: function complete(_complete) {
+      return this.set('complete', _complete);
+    }
+
+    /**
+     * @param key
+     * @param value
+     * @return {Anime}
+     */
+  }, {
+    key: "set",
+    value: function set(key, value) {
+      this.options[key] = value;
+      return this;
+    }
+
+    /**
+     * @param number
+     * @return {Anime}
+     */
+  }, {
+    key: "stagger",
+    value: function stagger(number) {
+      this.delay = animejs__WEBPACK_IMPORTED_MODULE_2__["default"].stagger(number);
+      return this;
+    }
+
+    /**
+     * @param padding
+     * @return {Anime}
+     */
+  }, {
+    key: "paddingBottom",
+    value: function paddingBottom(padding) {
+      return this.set('padding-bottom', padding);
+    }
+
+    /**
+     * @param padding
+     * @return {Anime}
+     */
+  }, {
+    key: "paddingTop",
+    value: function paddingTop(padding) {
+      return this.set('padding-top', padding);
+    }
+
+    /**
+     * @return {{}}
+     */
+  }, {
+    key: "play",
+    value: function play() {
+      return (0,animejs__WEBPACK_IMPORTED_MODULE_2__["default"])(this.options);
+    }
+  }]);
+}();
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Anime);
+
+/***/ }),
+
+/***/ "./src/assets/js/partials/tooltip.js":
+/*!*******************************************!*\
+  !*** ./src/assets/js/partials/tooltip.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ toolTip)
+/* harmony export */ });
+function toolTip() {
+  var tooltipToggleClick = document.querySelectorAll('.tooltip-toggle--clickable'),
+    tooltipToggleHover = document.querySelectorAll('.tooltip-toggle--hover'),
+    closeTooltip = document.querySelectorAll('.close-tooltip');
+  var isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
+  var showTooltip = function showTooltip(element) {
+    element.classList.add('visible');
+  };
+  var hideTooltip = function hideTooltip(element) {
+    element.classList.remove('visible');
+  };
+
+  // Show the tooltip if the type is clickable
+  if (tooltipToggleClick.length) {
+    tooltipToggleClick.forEach(function (element) {
+      element.addEventListener('click', function (e) {
+        e.stopPropagation();
+        showTooltip(element);
+      });
+    });
+  }
+
+  // Show the tooltip if the type is hover or click on touch devices
+  if (tooltipToggleHover.length) {
+    tooltipToggleHover.forEach(function (element) {
+      if (isTouchDevice) {
+        element.addEventListener('click', function (e) {
+          e.stopPropagation();
+          showTooltip(element);
+        });
+      } else {
+        element.addEventListener('mouseenter', function () {
+          showTooltip(element);
+        });
+        element.addEventListener('mouseleave', function () {
+          hideTooltip(element);
+        });
+      }
+    });
+  }
+
+  // Hide the tooltip when the close button is clicked
+  if (closeTooltip.length) {
+    closeTooltip.forEach(function (element) {
+      element.addEventListener('click', function (e) {
+        e.stopPropagation();
+        hideTooltip(element.parentElement.parentElement);
+      });
+    });
+  }
+
+  // Hide the tooltip on window click
+  window.addEventListener('click', function () {
+    tooltipToggleClick.forEach(function (element) {
+      hideTooltip(element);
+    });
+    tooltipToggleHover.forEach(function (element) {
+      hideTooltip(element);
+    });
+  });
+}
+
+/***/ }),
+
+/***/ "./src/assets/js/wishlist.js":
+/*!***********************************!*\
+  !*** ./src/assets/js/wishlist.js ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var _base_page__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./base-page */ "./src/assets/js/base-page.js");
+
+
+
+
+
+function _callSuper(t, o, e) { return o = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(o), (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__["default"])(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(t).constructor) : o.apply(t, e)); }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+
+var Wishlist = /*#__PURE__*/function (_BasePage) {
+  function Wishlist() {
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, Wishlist);
+    return _callSuper(this, Wishlist, arguments);
+  }
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(Wishlist, _BasePage);
+  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(Wishlist, [{
+    key: "onReady",
+    value: function onReady() {
+      var _this = this;
+      // init wishlist icons in product cards
+      salla.storage.get('salla::wishlist', []).forEach(function (id) {
+        return _this.toggleFavoriteIcon(id);
+      });
+    }
+  }, {
+    key: "registerEvents",
+    value: function registerEvents() {
+      var _this2 = this;
+      salla.wishlist.event.onAdded(function (event, id) {
+        return _this2.toggleFavoriteIcon(id);
+      });
+      salla.wishlist.event.onRemoved(function (response, id) {
+        _this2.toggleFavoriteIcon(id, false);
+
+        // just an animation when the item removed from wishlist page
+        var item = document.querySelector('#wishlist-product-' + id);
+        if (!item) {
+          return;
+        }
+        app.anime(item, false).height(0) // -> from 'height' to '0',
+        .opacity(0).easing('easeInOutQuad').duration(300).complete(function () {
+          return item.remove() || document.querySelector('#wishlist>*') || window.location.reload();
+        }).play();
+      });
+    }
+  }, {
+    key: "toggleFavoriteIcon",
+    value: function toggleFavoriteIcon(id) {
+      var isAdded = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+      document.querySelectorAll('.btn--wishlist[data-id="' + id + '"]').forEach(function (btn) {
+        app.toggleElementClassIf(btn, 'is-added', 'not-added', function () {
+          return isAdded;
+        });
+        // app.toggleElementClassIf(btn, 'pulse', 'un-favorited', () => isAdded);
+      });
+    }
+  }]);
+}(_base_page__WEBPACK_IMPORTED_MODULE_5__["default"]);
+Wishlist.initiateWhenReady();
+
+/***/ }),
+
+/***/ "./src/assets/styles/app.scss":
+/*!************************************!*\
+  !*** ./src/assets/styles/app.scss ***!
+  \************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/.pnpm/mini-css-extract-plugin@2.9.2_webpack@5.99.9/node_modules/mini-css-extract-plugin/dist/loader.js):\nHookWebpackError: Module build failed (from ./node_modules/.pnpm/sass-loader@13.3.3_sass@1.85.1_webpack@5.99.9/node_modules/sass-loader/dist/cjs.js):\nCan't find stylesheet to import.\n   ╷\n99 │ @import 'custom';   \r\n   │         ^^^^^^^^\n   ╵\n  src\\assets\\styles\\app.scss 99:9  root stylesheet\n    at tryRunOrWebpackError (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\HookWebpackError.js:86:9)\n    at __webpack_require_module__ (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5464:12)\n    at __webpack_require__ (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5411:18)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5498:20\n    at symbolIterator (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3485:9)\n    at done (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3527:9)\n    at Hook.eval [as callAsync] (eval at create (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\tapable@2.2.2\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:15:1)\n    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\tapable@2.2.2\\node_modules\\tapable\\lib\\Hook.js:20:14)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5386:43\n    at symbolIterator (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3482:9)\n    at timesSync (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:2297:7)\n    at Object.eachLimit (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3463:5)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5348:16\n    at symbolIterator (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3485:9)\n    at timesSync (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:2297:7)\n    at Object.eachLimit (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3463:5)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5316:15\n    at symbolIterator (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3485:9)\n    at done (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3527:9)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5262:8\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:3677:6\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\HookWebpackError.js:67:2\n    at Hook.eval [as callAsync] (eval at create (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\tapable@2.2.2\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:15:1)\n    at Cache.store (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Cache.js:113:20)\n    at ItemCacheFacade.store (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\CacheFacade.js:142:15)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:3676:11\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Cache.js:97:34\n    at Array.<anonymous> (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\cache\\MemoryCachePlugin.js:46:13)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Cache.js:97:19\n    at Hook.eval [as callAsync] (eval at create (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\tapable@2.2.2\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:19:1)\n    at Cache.get (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Cache.js:81:18)\n    at ItemCacheFacade.get (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\CacheFacade.js:116:15)\n    at Compilation._codeGenerationModule (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:3644:9)\n    at codeGen (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5250:11)\n    at symbolIterator (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3482:9)\n    at timesSync (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:2297:7)\n    at Object.eachLimit (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3463:5)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5280:14\n    at processQueue (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\util\\processAsyncTree.js:61:4)\n    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)\n-- inner error --\nError: Module build failed (from ./node_modules/.pnpm/sass-loader@13.3.3_sass@1.85.1_webpack@5.99.9/node_modules/sass-loader/dist/cjs.js):\nCan't find stylesheet to import.\n   ╷\n99 │ @import 'custom';   \r\n   │         ^^^^^^^^\n   ╵\n  src\\assets\\styles\\app.scss 99:9  root stylesheet\n    at Object.<anonymous> (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\css-loader@6.11.0_webpack@5.99.9\\node_modules\\css-loader\\dist\\cjs.js??ruleSet[1].rules[1].use[1]!C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\postcss-loader@7.3.4_postcs_cf25b54d9897dba8c8a1b0c09cbd8d11\\node_modules\\postcss-loader\\dist\\cjs.js??ruleSet[1].rules[1].use[2]!C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\sass-loader@13.3.3_sass@1.85.1_webpack@5.99.9\\node_modules\\sass-loader\\dist\\cjs.js??ruleSet[1].rules[1].use[3]!C:\\Users\\musta\\projects\\twilight-for-lagate\\src\\assets\\styles\\app.scss:1:7)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\javascript\\JavascriptModulesPlugin.js:518:10\n    at Hook.eval [as call] (eval at create (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\tapable@2.2.2\\node_modules\\tapable\\lib\\HookCodeFactory.js:19:10), <anonymous>:7:1)\n    at Hook.CALL_DELEGATE [as _call] (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\tapable@2.2.2\\node_modules\\tapable\\lib\\Hook.js:16:14)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5466:39\n    at tryRunOrWebpackError (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\HookWebpackError.js:81:7)\n    at __webpack_require_module__ (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5464:12)\n    at __webpack_require__ (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5411:18)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5498:20\n    at symbolIterator (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3485:9)\n    at done (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3527:9)\n    at Hook.eval [as callAsync] (eval at create (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\tapable@2.2.2\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:15:1)\n    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\tapable@2.2.2\\node_modules\\tapable\\lib\\Hook.js:20:14)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5386:43\n    at symbolIterator (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3482:9)\n    at timesSync (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:2297:7)\n    at Object.eachLimit (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3463:5)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5348:16\n    at symbolIterator (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3485:9)\n    at timesSync (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:2297:7)\n    at Object.eachLimit (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3463:5)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5316:15\n    at symbolIterator (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3485:9)\n    at done (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3527:9)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5262:8\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:3677:6\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\HookWebpackError.js:67:2\n    at Hook.eval [as callAsync] (eval at create (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\tapable@2.2.2\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:15:1)\n    at Cache.store (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Cache.js:113:20)\n    at ItemCacheFacade.store (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\CacheFacade.js:142:15)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:3676:11\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Cache.js:97:34\n    at Array.<anonymous> (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\cache\\MemoryCachePlugin.js:46:13)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Cache.js:97:19\n    at Hook.eval [as callAsync] (eval at create (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\tapable@2.2.2\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:19:1)\n    at Cache.get (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Cache.js:81:18)\n    at ItemCacheFacade.get (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\CacheFacade.js:116:15)\n    at Compilation._codeGenerationModule (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:3644:9)\n    at codeGen (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5250:11)\n    at symbolIterator (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3482:9)\n    at timesSync (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:2297:7)\n    at Object.eachLimit (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\neo-async@2.6.2\\node_modules\\neo-async\\async.js:3463:5)\n    at C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\Compilation.js:5280:14\n    at processQueue (C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\webpack@5.99.9_webpack-cli@5.1.4\\node_modules\\webpack\\lib\\util\\processAsyncTree.js:61:4)\n    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)\n\nGenerated code for C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\css-loader@6.11.0_webpack@5.99.9\\node_modules\\css-loader\\dist\\cjs.js??ruleSet[1].rules[1].use[1]!C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\postcss-loader@7.3.4_postcs_cf25b54d9897dba8c8a1b0c09cbd8d11\\node_modules\\postcss-loader\\dist\\cjs.js??ruleSet[1].rules[1].use[2]!C:\\Users\\musta\\projects\\twilight-for-lagate\\node_modules\\.pnpm\\sass-loader@13.3.3_sass@1.85.1_webpack@5.99.9\\node_modules\\sass-loader\\dist\\cjs.js??ruleSet[1].rules[1].use[3]!C:\\Users\\musta\\projects\\twilight-for-lagate\\src\\assets\\styles\\app.scss\n1 | throw new Error(\"Module build failed (from ./node_modules/.pnpm/sass-loader@13.3.3_sass@1.85.1_webpack@5.99.9/node_modules/sass-loader/dist/cjs.js):\\nCan't find stylesheet to import.\\n   ╷\\n99 │ @import 'custom';   \\r\\n   │         ^^^^^^^^\\n   ╵\\n  src\\\\assets\\\\styles\\\\app.scss 99:9  root stylesheet\");");
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
+/******/ 	__webpack_require__("./src/assets/styles/app.scss");
+/******/ 	__webpack_require__("./src/assets/js/wishlist.js");
+/******/ 	__webpack_require__("./src/assets/js/app.js");
+/******/ 	var __webpack_exports__ = __webpack_require__("./src/assets/js/blog.js");
+/******/ 	
 /******/ })()
 ;
 //# sourceMappingURL=app.js.map

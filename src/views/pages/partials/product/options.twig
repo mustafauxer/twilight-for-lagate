@@ -2,17 +2,126 @@
 {% set has_opts = product.options is defined and (product.options|length > 0) %}
 {% set SIZE_OPTION_ID = 750237441 %}
 
+
+
 {# 1) Color option FIRST ===== #}
+{# === Color option (independent swatches) === #}
 {% set COLOR_NAMES = ['اللون','color','لون'] %}
 {% set color_opt = null %}
 {% if has_opts %}
   {% for o in product.options %}
     {% set n = (o.name|default('')|lower|trim) %}
-    {% if n in COLOR_NAMES and o.details is defined and (o.details|length > 0) %}
+    {% if n in COLOR_NAMES and o.details is defined and o.details|length %}
       {% set color_opt = o %}
     {% endif %}
   {% endfor %}
 {% endif %}
+
+{% if color_opt %}
+  <div class="mt-6" id="color-swatch-block">
+    <p class="mb-3 text-sm font-semibold text-gray-800">
+      {{ trans('pages.products.selected_color')|default('Selected Color') }}:
+      <span id="color-selected-name" class="font-normal">
+        {{ (color_opt.details|first).name|default('—') }}
+      </span>
+    </p>
+
+    <input type="hidden" id="color-input"
+           name="options[{{ color_opt.id }}]"
+           value="{{ (color_opt.details|first).id }}"/>
+
+    <div id="color-swatches" class="flex flex-wrap gap-3 items-center">
+      {% for d in color_opt.details %}
+        {% set img = d.image|default(d.icon|default(d.photo|default(d.media|default(d.url|default(d.note|default('')))))) %}
+        <button type="button"
+                class="swatch {{ loop.first ? 'is-active' : '' }}"
+                data-detail-id="{{ d.id }}"
+                data-detail-name="{{ d.name|e('html_attr') }}">
+          {% if img %}
+            <img src="{{ img }}" alt="{{ d.name|default('color') }}" />
+          {% else %}
+            <span class="label">{{ d.name }}</span>
+          {% endif %}
+        </button>
+      {% endfor %}
+    </div>
+  </div>
+
+  {# تصحيحات ستايل صغيرة تمنع "الأكل" من الحافة #}
+  <style>
+    #color-swatches .swatch{
+      width:56px; height:56px; border-radius:10px;
+      border:1px solid #D1D5DB; background:#fff;
+      overflow:hidden; display:inline-flex; align-items:center; justify-content:center;
+      padding:2px; box-sizing:border-box;
+    }
+    #color-swatches .swatch.is-active{
+      border-color:#000; box-shadow: inset 0 0 0 2px #000;
+    }
+    #color-swatches .swatch img{
+      display:block; width:100%; height:100%;
+      object-fit:cover; object-position:center center;
+      transform:translateZ(0);
+    }
+    #color-swatches .swatch .label{
+      font-size:11px; color:#374151; text-align:center; padding:2px;
+      width:100%; height:100%; display:grid; place-items:center; background:#F3F4F6;
+    }
+  </style>
+
+  <script>
+  (function(){
+    var sw   = document.getElementById('color-swatches');
+    var hid  = document.getElementById('color-input');
+    var nameEl = document.getElementById('color-selected-name');
+    if(!sw || !hid) return;
+
+    sw.addEventListener('click', function(e){
+      var btn = e.target.closest('button[data-detail-id]');
+      if(!btn) return;
+
+      var val = btn.getAttribute('data-detail-id');
+      var lab = btn.getAttribute('data-detail-name') || '';
+
+      // حدّث القيمة والاسم
+      hid.value = val;
+      hid.dispatchEvent(new Event('change', {bubbles:true}));
+      if(nameEl) nameEl.textContent = lab;
+
+      // فعّل/أزل التنشيط بصريًا
+      sw.querySelectorAll('button[data-detail-id]').forEach(function(b){
+        b.classList.remove('is-active');
+      });
+      btn.classList.add('is-active');
+
+      // (اختياري) لو فيه select أصلي جوه native-options حدثه
+      var host = document.getElementById('native-options') || document;
+      var sel  = host.querySelector('[name="'+hid.name+'"]');
+      if(sel){ sel.value = val; sel.dispatchEvent(new Event('change', {bubbles:true})); }
+    });
+
+    // اخفاء صف اللون الأصلي لو ظهر
+    var host = document.getElementById('native-options') || document;
+    function hideNativeColorRow(){
+      var input = host.querySelector('[name="{{ 'options[' ~ (color_opt.id) ~ ']' }}"]');
+      if(input){
+        input.disabled = true;
+        var row = input.closest('.form-group, .s-form-group, .product-option, section, .field, div');
+        if(row) row.style.display = 'none';
+      }
+    }
+    hideNativeColorRow();
+    new MutationObserver(hideNativeColorRow).observe(host,{childList:true,subtree:true});
+  })();
+  </script>
+{% endif %}
+
+
+
+
+
+
+
 
 {# 2) Size option ===== #}
 {% set size_opt = null %}
@@ -65,15 +174,15 @@
         {# نحاول نلقط صورة اللون إن وُجدت، وإلا نعرض الاسم #}
         {% set img = d.image|default(d.icon|default(d.photo|default(d.media|default(d.url|default(d.note|default('')))))) %}
         <button type="button"
-                class="group relative h-14 w-10 rounded-md border border-gray-300 overflow-hidden {{ loop.first ? 'ring-2 ring-black' : '' }}"
-                data-detail-id="{{ d.id }}"
-                data-detail-name="{{ d.name|e('html_attr') }}">
+          class="group relative h-12 w-12 rounded-md border border-gray-300 bg-white grid place-items-center
+                {{ loop.first ? 'ring-2 ring-black ring-offset-1 ring-offset-white' : '' }}"
+          data-detail-id="{{ d.id }}"
+          data-detail-name="{{ d.name|e('html_attr') }}">
           {% if img %}
-            <img src="{{ img }}" alt="{{ d.name|default('color') }}" class="w-full h-full object-cover">
+            <img src="{{ img }}" alt="{{ d.name|default('color') }}"
+                class="max-w-full max-h-full object-contain" />
           {% else %}
-            <span class="absolute inset-0 grid place-items-center text-[11px] px-1 text-gray-700 bg-gray-100">
-              {{ d.name }}
-            </span>
+            <span class="text-[11px] px-1 text-gray-700">{{ d.name }}</span>
           {% endif %}
         </button>
       {% endfor %}
