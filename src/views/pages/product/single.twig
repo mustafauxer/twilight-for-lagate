@@ -223,53 +223,94 @@
 
                     {# === LTR wrapper: كل حاجة من الشمال لليمين داخل الفورم === #}
                     <div id="buy-area" dir="ltr" class="space-y-6 text-left">
+{# ========== Selected Color (واحدة لكل لون) ========== #}
+{% set _label_try = trans('pages.products.selected_color') %}
+{% set selected_color_label = _label_try == 'pages.products.selected_color' ? 'Selected Color' : _label_try %}
 
-                        {# --- Selected Color (مع قيمة أولية من Alt أول صورة) --- #}
-                        {% set _label_try = trans('pages.products.selected_color') %}
-                        {% set selected_color_label = _label_try == 'pages.products.selected_color' ? 'Selected Color' : _label_try %}
-                        {% set first_alt = (product.images|length and product.images[0].alt is defined and product.images[0].alt|trim) ? product.images[0].alt|trim : '' %}
+{# كوّن لستة صور تمثل الألوان: أول صورة لكل alt مميّز #}
+{% set color_thumbs = [] %}
+{% set _seen = [] %}
+{% for img in product.images %}
+  {% set alt = (img.alt|default('')|trim) %}
+  {% if alt is not empty and (alt|lower) not in _seen %}
+    {% set color_thumbs = color_thumbs|merge([{ 'alt': alt, 'url': img.url, 'index': loop.index0 }]) %}
+    {% set _seen = _seen|merge([alt|lower]) %}
+  {% endif %}
+{% endfor %}
 
-                        <div id="selected-color-section" class="mt-0">
-                            <p class="mb-3 text-sm font-semibold text-gray-800">
-                            {{ selected_color_label }}:
-                            <span id="selected-color-name" class="font-normal">{{ first_alt is not empty ? first_alt : '—' }}</span>
-                            </p>
+<div id="selected-color-section" class="mt-0">
+  <p class="mb-3 text-sm font-semibold text-gray-800">
+    {{ selected_color_label }}:
+    <span id="selected-color-name" class="font-normal">
+      {{ color_thumbs|length ? color_thumbs[0].alt : '—' }}
+    </span>
+  </p>
 
-                            {# شبكة الثمبنيلز — تبدأ من الشمال #}
-                            <div id="color-thumbs"
-                                class="mt-3 grid grid-cols-4 sm:grid-cols-6 gap-3 justify-start justify-items-start">
-                                {% for image in product.images %}
-                                <button
-                                    type="button"
-                                    class="group block w-full aspect-[3/4] overflow-hidden rounded-xl ring-1 ring-gray-200 hover:ring-gray-400"
-                                    data-slide="{{ loop.index0 }}"
-                                    onclick="selectPdpThumb({{ loop.index0 }}, '{{ image.alt|default('')|trim|e('js') }}')">
-                                    <img src="{{ image.url }}" alt="{{ image.alt|default(product.name) }}" class="w-full h-full object-cover">
-                                </button>
-                                {% endfor %}
-                            </div>
+  <div id="color-thumbs"
+       class="mt-3 grid grid-cols-4 sm:grid-cols-6 gap-3 justify-start justify-items-start">
+    {% for c in color_thumbs %}
+      <button
+        type="button"
+        class="color-thumb block w-full aspect-[3/4] overflow-hidden rounded-xl ring-2 ring-transparent hover:ring-gray-400 transition"
+        data-slide="{{ c.index }}"
+        data-label="{{ c.alt|e('js') }}">
+        <img src="{{ c.url }}" alt="{{ c.alt|default(product.name) }}" class="w-full h-full object-cover" />
+      </button>
+    {% endfor %}
+  </div>
+</div>
 
-                            {# ملاحظة: سيب دالة selectPdpThumb مرة واحدة في الصفحة؛ لو هنا فقط فتمام #}
-                            <script>
-                            function selectPdpThumb(index, label) {
-                                var nameEl = document.getElementById('selected-color-name');
-                                if (nameEl) nameEl.textContent = (label && label.trim()) ? label : '—';
+<script>
+(function(){
+  var grid  = document.getElementById('color-thumbs');
+  var nameEl= document.getElementById('selected-color-name');
 
-                                var slider = document.getElementById('details-slider-{{ product.id }}');
-                                if (!slider) return;
+  if(!grid) return;
 
-                                var thumbsHost = slider.querySelector('[slot="thumbs"]');
-                                if (thumbsHost && thumbsHost.children && thumbsHost.children[index]) {
-                                thumbsHost.children[index].dispatchEvent(new MouseEvent('click', { bubbles: true }));
-                                return;
-                                }
-                                var swiperEl = slider.querySelector('.swiper');
-                                if (swiperEl && swiperEl.swiper && typeof swiperEl.swiper.slideTo === 'function') {
-                                swiperEl.swiper.slideTo(index);
-                                }
-                            }
-                            </script>
-                        </div>
+  function setActive(btn){
+    grid.querySelectorAll('.color-thumb').forEach(function(b){
+      b.classList.remove('ring-black');
+      b.classList.add('ring-transparent');
+    });
+    btn.classList.remove('ring-transparent');
+    btn.classList.add('ring-black'); // الإطار الأسود
+  }
+
+  // علّم أول عنصر كبداية
+  var first = grid.querySelector('.color-thumb');
+  if(first) setActive(first);
+
+  grid.addEventListener('click', function(e){
+    var btn = e.target.closest('.color-thumb');
+    if(!btn) return;
+
+    setActive(btn);
+
+    // حدّث اسم اللون
+    var label = btn.getAttribute('data-label') || '—';
+    if (nameEl) nameEl.textContent = label;
+
+    // حرّك سلايدر الصور الرئيسية لنفس الفهرس
+    var i = parseInt(btn.getAttribute('data-slide'), 10) || 0;
+    var slider = document.getElementById('details-slider-{{ product.id }}');
+    if (!slider) return;
+
+    // لو Swiper موجود
+    var swiperEl = slider.querySelector('.swiper');
+    if (swiperEl && swiperEl.swiper && typeof swiperEl.swiper.slideTo === 'function') {
+      swiperEl.swiper.slideTo(i);
+      return;
+    }
+
+    // فالباك: اضغط thumbnail المقابل في slot="thumbs"
+    var thumbsHost = slider.querySelector('[slot="thumbs"]');
+    if (thumbsHost && thumbsHost.children && thumbsHost.children[i]) {
+      thumbsHost.children[i].dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    }
+  });
+})();
+</script>
+
 
                         {# --- Quantity تحت Selected Color ومحاذي شمال --- #}
                         {% if product.is_hidden_quantity or product.type == 'booking' %}
@@ -515,23 +556,35 @@
                     </div> 
                     
                     {# /buy-area #}
-                    <section class="bg-white rounded-md rounded-b-none">
-                    {# Check in Store على اليمين #}
-                    <div class="text-sm text-gray-700 hover:underline inline-flex items-center gap-1">
+                    {# ===== Utility row: Check in Store ===== #}
+                    <div class="pdp-utility-row">
                         <a href="#!"
-                        class="text-sm text-gray-700 hover:underline inline-flex items-center gap-1"
-                        onclick="salla.event.dispatch('scopes::open', {mode: 'availability', product_id: '{{ product.id }}'})">
-                        Check in Store 
+                            onclick="salla.event.dispatch('scopes::open', {mode: 'availability', product_id: '{{ product.id }}'})">
+                            Check in Store
                         </a>
+                        <span class="sicon-keyboard_arrow_right text-[14px]"></span>
                     </div>
 
-                    {# زر أسود ثابت يرسل الفورم #}
-                    <button type="submit"
-                            class="mt-4 w-full h-14 rounded-xl bg-black text-white font-bold tracking-wide
-                                    transition-colors hover:bg-[#111] focus:outline-none focus:ring-2 focus:ring-black">
+                    {# ===== زر الإضافة للسلة ===== #}
+                    {# خيار A: لو بتستخدم web-component سلة #}
+                    <salla-add-product-button
+                        class="mt-3 w-full sticky-product-bar__btn s-add-to-cart--black"
+                        product-status="{{ product.status }}"
+                        product-type="{{ product.type }}"
+                        product-id="{{ product.id }}"
+                        loader-position="end"
+                        type="submit"
+                        width="wide">
                         ADD TO CART
+                    </salla-add-product-button>
+
+                    {# خيار B (احتياطي): زر HTML لو عايز تلغي الويب-كمبوننت نهائيًا #}
+                    {#
+                    <button type="submit" class="mt-3 w-full btn-addtocart-black">
+                    ADD TO CART
                     </button>
-                    </section>
+                    #}
+
 
                     {#{% if product.is_giftable %}
                         <salla-gifting class="mt-5" widget-subtitle="{{ gifting_intro }}" product-id="{{ product.id }}" {{ product.is_require_shipping ? 'physical-products' : ''  }}></salla-gifting>
@@ -720,9 +773,53 @@
     </div>
 {% endblock %}
 
+
+
+
 {% block scripts %}
-    <script defer src="{{ 'product.js' | asset }}"></script>
-    {% if product.has_3d_image %}
-        <script type="module" defer src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-    {% endif %}
+  <script defer src="{{ 'product.js' | asset }}"></script>
+  {% if product.has_3d_image %}
+    <script type="module" defer src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  {% endif %}
+
+  <script>
+  (function () {
+    // إعدادات بسيطة للرسالة
+    var MSG_ID   = 'size-error-msg';
+    var MSG_TXT  = 'من فضلك اختر المقاس';
+    var MSG_HTML = '<div id="'+MSG_ID+'" style="margin-top:8px;font-size:12px;color:#b91c1c;">'+MSG_TXT+'</div>';
+
+    // مساعدات
+    function ensureMsg(host){
+      if (!host || document.getElementById(MSG_ID)) return;
+      host.insertAdjacentHTML('beforeend', MSG_HTML);
+    }
+    function clearMsg(){
+      var m = document.getElementById(MSG_ID);
+      if (m && m.parentNode) m.parentNode.removeChild(m);
+    }
+
+    // امسح رسالة الخطأ لما المستخدم يختار مقاس
+    document.addEventListener('change', function(e){
+      if (e.target && e.target.id === 'size-input') {
+        if (e.target.value && String(e.target.value).trim() !== '') clearMsg();
+      }
+    }, true);
+
+    // امنع الإرسال لو مفيش مقاس، وأظهر رسالة تحت الحبوب
+    document.addEventListener('submit', function(e){
+      var form = e.target.closest('form.product-form');
+      if (!form) return;
+
+      var sizeInput = form.querySelector('#size-input');
+      if (sizeInput && (!sizeInput.value || String(sizeInput.value).trim() === '')) {
+        e.preventDefault();
+        // حاول تلاقي حاوية الحبوب لعرض الرسالة تحتها
+        var pillsHost = form.querySelector('#size-pills');
+        if (pillsHost) ensureMsg(pillsHost);
+        else alert(MSG_TXT); // فallback لو مفيش حبوب
+      }
+    }, true); // << capture=true
+  })();
+  </script>
 {% endblock %}

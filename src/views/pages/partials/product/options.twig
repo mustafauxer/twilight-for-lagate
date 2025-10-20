@@ -1,36 +1,129 @@
-{# ===== Size Pills + Filtered Native Options (stable) ===== #}
-{% set has_opts = product.options is defined and product.options|length %}
+{# ===== Setup ===== #}
+{% set has_opts = product.options is defined and (product.options|length > 0) %}
 {% set SIZE_OPTION_ID = 750237441 %}
-{% set size_opt = null %}
 
+{# 1) Color option FIRST ===== #}
+{% set COLOR_NAMES = ['اللون','color','لون'] %}
+{% set color_opt = null %}
 {% if has_opts %}
-  {# match by ID -> fallback by name -> fallback first single/multi #}
+  {% for o in product.options %}
+    {% set n = (o.name|default('')|lower|trim) %}
+    {% if n in COLOR_NAMES and o.details is defined and (o.details|length > 0) %}
+      {% set color_opt = o %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{# 2) Size option ===== #}
+{% set size_opt = null %}
+{% if has_opts %}
+  {# by ID #}
   {% for o in product.options %}{% if o.id == SIZE_OPTION_ID %}{% set size_opt = o %}{% endif %}{% endfor %}
+  {# by name fallback #}
   {% if size_opt is null %}
     {% for o in product.options %}
       {% set n = (o.name|default('')|lower|trim) %}
       {% if 'المقاس' in n or 'size' in n %}{% set size_opt = o %}{% endif %}
     {% endfor %}
   {% endif %}
+  {# first option with details fallback #}
   {% if size_opt is null %}
     {% for o in product.options %}
-      {% if (o.type in ['single-option','multi-options']) and (o.details is defined) and (o.details|length) %}
-        {% set size_opt = o %}{% break %}
+      {% if (o.type in ['single-option','multi-options']) and (o.details is defined) and (o.details|length > 0) and (size_opt is null) %}
+        {% set size_opt = o %}
       {% endif %}
     {% endfor %}
   {% endif %}
 {% endif %}
 
-{# باقي الخيارات بدون المقاس #}
+{# 3) Filter native options (exclude color & size) ===== #}
 {% set filtered = [] %}
 {% if has_opts %}
   {% for o in product.options %}
-    {% if not (size_opt and o.id == size_opt.id) %}
+    {% if not (size_opt and o.id == size_opt.id) and not (color_opt and o.id == color_opt.id) %}
       {% set filtered = filtered|merge([o]) %}
     {% endif %}
   {% endfor %}
 {% endif %}
 
+{# ===== Color swatches ===== #}
+{% if color_opt %}
+  <div class="mt-6" id="color-swatch-block">
+    <p class="mb-3 text-sm font-semibold text-gray-800">
+      {{ trans('pages.products.selected_color')|default('Selected Color') }}:
+      <span id="color-selected-name" class="font-normal">
+        {{ (color_opt.details|first).name|default('—') }}
+      </span>
+    </p>
+
+    <input type="hidden" id="color-input"
+           name="options[{{ color_opt.id }}]"
+           value="{{ (color_opt.details|first).id }}"/>
+
+    <div id="color-swatches" class="flex flex-wrap gap-3 items-center">
+      {% for d in color_opt.details %}
+        {# نحاول نلقط صورة اللون إن وُجدت، وإلا نعرض الاسم #}
+        {% set img = d.image|default(d.icon|default(d.photo|default(d.media|default(d.url|default(d.note|default('')))))) %}
+        <button type="button"
+                class="group relative h-14 w-10 rounded-md border border-gray-300 overflow-hidden {{ loop.first ? 'ring-2 ring-black' : '' }}"
+                data-detail-id="{{ d.id }}"
+                data-detail-name="{{ d.name|e('html_attr') }}">
+          {% if img %}
+            <img src="{{ img }}" alt="{{ d.name|default('color') }}" class="w-full h-full object-cover">
+          {% else %}
+            <span class="absolute inset-0 grid place-items-center text-[11px] px-1 text-gray-700 bg-gray-100">
+              {{ d.name }}
+            </span>
+          {% endif %}
+        </button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    var sw = document.getElementById('color-swatches');
+    var hid= document.getElementById('color-input');
+    var nameEl=document.getElementById('color-selected-name');
+    if(!sw || !hid) return;
+
+    sw.addEventListener('click', function(e){
+      var btn = e.target.closest('button[data-detail-id]');
+      if(!btn) return;
+      var val = btn.getAttribute('data-detail-id');
+      var lab = btn.getAttribute('data-detail-name') || '';
+      hid.value = val;
+      hid.dispatchEvent(new Event('change', {bubbles:true}));
+      if(nameEl) nameEl.textContent = lab;
+
+      sw.querySelectorAll('button[data-detail-id]').forEach(function(b){
+        b.classList.remove('ring-2','ring-black');
+      });
+      btn.classList.add('ring-2','ring-black');
+
+      // مزامنة مع أي select أصلي (لو موجود)
+      var host = document.getElementById('native-options') || document;
+      var sel  = host.querySelector('[name="'+hid.name+'"]');
+      if(sel){ sel.value = val; sel.dispatchEvent(new Event('change', {bubbles:true})); }
+    });
+
+    // إخفاء صف اللون من الويب-كمبوننت
+    var host = document.getElementById('native-options') || document;
+    function hideNativeColorRow(){
+      var input = host.querySelector('[name="{{ 'options[' ~ color_opt.id ~ ']' }}"]');
+      if(input){
+        input.disabled = true;
+        var row = input.closest('.form-group, .s-form-group, .product-option, section, .field, div');
+        if(row) row.style.display = 'none';
+      }
+    }
+    hideNativeColorRow();
+    new MutationObserver(hideNativeColorRow).observe(host,{childList:true,subtree:true});
+  })();
+  </script>
+{% endif %}
+
+{# ===== Size pills ===== #}
 <div class="mt-6">
   <div class="mb-3 flex items-center justify-between">
     <p class="text-sm font-semibold text-gray-800">
@@ -38,8 +131,7 @@
     </p>
     {% set find_lbl = trans('pages.products.find_my_size')|default('Find My Size') %}
     {% if product.has_size_guide %}
-      <a href="#!" onclick="salla?.event?.dispatch?.('size-guide::open','{{ product.id }}')"
-         class="text-sm text-gray-400 hover:text-gray-700 inline-flex items-center gap-1">
+      <a href="#!" onclick="salla?.event?.dispatch?.('size-guide::open','{{ product.id }}')" class="text-sm text-gray-400 hover:text-gray-700 inline-flex items-center gap-1">
         {{ find_lbl }} <span class="sicon-keyboard_arrow_right text-[14px]"></span>
       </a>
     {% else %}
@@ -47,8 +139,11 @@
     {% endif %}
   </div>
 
-  {% if size_opt and size_opt.details is defined and size_opt.details|length %}
-    {% set pre = (size_opt.details|filter(d => d.is_selected)|first) ?? (size_opt.details|first) %}
+  {% if size_opt and size_opt.details is defined and (size_opt.details|length > 0) %}
+    {% set pre = null %}
+    {% for d in size_opt.details %}{% if d.is_selected %}{% set pre = d %}{% endif %}{% endfor %}
+    {% if pre is null %}{% set pre = size_opt.details|first %}{% endif %}
+
     <input type="hidden" id="size-input" name="options[{{ size_opt.id }}]" value="{{ pre.id }}"/>
 
     <div id="size-pills" class="flex flex-wrap gap-3">
@@ -67,30 +162,42 @@
   {% endif %}
 </div>
 
+{# ===== Native options (without color & size) ===== #}
 {% if filtered|length %}
   <div id="native-options" class="mt-4">
     <salla-product-options options="{{ filtered }}" product-id="{{ product.id }}"></salla-product-options>
   </div>
+{% else %}
+  <div id="native-options"></div>
 {% endif %}
 
+{# ===== Size pills JS ===== #}
 <script>
 (function(){
-  var pills = document.getElementById('size-pills');
+  var pills  = document.getElementById('size-pills');
   var hidden = document.getElementById('size-input');
   if(!pills || !hidden) return;
 
   pills.addEventListener('click', function(e){
     var btn = e.target.closest('button[data-detail-id]');
     if(!btn || btn.disabled) return;
-    hidden.value = btn.getAttribute('data-detail-id');
-    hidden.dispatchEvent(new Event('change', {bubbles:true}));
 
-    pills.querySelectorAll('button[data-detail-id]').forEach(function(b){
-      b.classList.remove('bg-black','text-white','border-black');
-      b.classList.add('bg-white','text-gray-900','border-gray-400');
-    });
+    var val = btn.getAttribute('data-detail-id');
+    hidden.value = val;
+    hidden.dispatchEvent(new Event('change', { bubbles:true }));
+
+    var all = pills.querySelectorAll('button[data-detail-id]');
+    for(var i=0;i<all.length;i++){
+      all[i].classList.remove('bg-black','text-white','border-black');
+      all[i].classList.add('bg-white','text-gray-900','border-gray-400');
+    }
     btn.classList.remove('bg-white','text-gray-900','border-gray-400');
     btn.classList.add('bg-black','text-white','border-black');
+
+    // مزامنة مع select الأصلي لو موجود
+    var host = document.getElementById('native-options') || document;
+    var sel  = host.querySelector('[name="'+hidden.name+'"]');
+    if(sel){ sel.value = val; sel.dispatchEvent(new Event('change', {bubbles:true})); }
   });
 })();
 </script>
