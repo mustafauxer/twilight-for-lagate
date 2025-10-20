@@ -1,30 +1,36 @@
-{# ===== Size Pills (robust) + Hide native size row ===== #}
-
-{% set SIZE_OPTION_ID = 750237441 %}
+{# ===== Size Pills + Filtered Native Options (stable) ===== #}
 {% set has_opts = product.options is defined and product.options|length %}
-{% set size_option = null %}
+{% set SIZE_OPTION_ID = 750237441 %}
+{% set size_opt = null %}
 
-{# محاولة التقاط خيار المقاس من الداتا (لو متاح) #}
 {% if has_opts %}
-  {# أولاً بالـ ID #}
-  {% for o in product.options %}
-    {% if o.id == SIZE_OPTION_ID %}
-      {% set size_option = o %}
-    {% endif %}
-  {% endfor %}
-
-  {# ثم بالاسم (عربي/إنجليزي) #}
-  {% if size_option is null %}
+  {# match by ID -> fallback by name -> fallback first single/multi #}
+  {% for o in product.options %}{% if o.id == SIZE_OPTION_ID %}{% set size_opt = o %}{% endif %}{% endfor %}
+  {% if size_opt is null %}
     {% for o in product.options %}
       {% set n = (o.name|default('')|lower|trim) %}
-      {% if 'المقاس' in n or 'size' in n or 'measure' in n %}
-        {% set size_option = o %}
+      {% if 'المقاس' in n or 'size' in n %}{% set size_opt = o %}{% endif %}
+    {% endfor %}
+  {% endif %}
+  {% if size_opt is null %}
+    {% for o in product.options %}
+      {% if (o.type in ['single-option','multi-options']) and (o.details is defined) and (o.details|length) %}
+        {% set size_opt = o %}{% break %}
       {% endif %}
     {% endfor %}
   {% endif %}
 {% endif %}
 
-{# هيدر القسم #}
+{# باقي الخيارات بدون المقاس #}
+{% set filtered = [] %}
+{% if has_opts %}
+  {% for o in product.options %}
+    {% if not (size_opt and o.id == size_opt.id) %}
+      {% set filtered = filtered|merge([o]) %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
 <div class="mt-6">
   <div class="mb-3 flex items-center justify-between">
     <p class="text-sm font-semibold text-gray-800">
@@ -33,148 +39,58 @@
     {% set find_lbl = trans('pages.products.find_my_size')|default('Find My Size') %}
     {% if product.has_size_guide %}
       <a href="#!" onclick="salla?.event?.dispatch?.('size-guide::open','{{ product.id }}')"
-         class="text-sm text-gray-700 hover:underline inline-flex items-center gap-1">
+         class="text-sm text-gray-400 hover:text-gray-700 inline-flex items-center gap-1">
         {{ find_lbl }} <span class="sicon-keyboard_arrow_right text-[14px]"></span>
       </a>
     {% else %}
-      <span class="text-sm text-gray-400">{{ find_lbl }}</span>
+      <span class="text-sm text-gray-300">{{ find_lbl }}</span>
     {% endif %}
   </div>
 
-  {# حاوية الحبوب + حقل خفي سنحدّثه بالـJS #}
-  <input type="hidden" id="size-input"
-         name="options[{{ size_option ? size_option.id : SIZE_OPTION_ID }}]"
-         value="{{ size_option and size_option.details|length ? (size_option.details|first).id : '' }}">
+  {% if size_opt and size_opt.details is defined and size_opt.details|length %}
+    {% set pre = (size_opt.details|filter(d => d.is_selected)|first) ?? (size_opt.details|first) %}
+    <input type="hidden" id="size-input" name="options[{{ size_opt.id }}]" value="{{ pre.id }}"/>
 
-  <div id="size-pills" class="mt-3 flex flex-wrap gap-3"></div>
+    <div id="size-pills" class="flex flex-wrap gap-3">
+      {% for d in size_opt.details %}
+        {% set active = d.id == pre.id %}
+        <button type="button"
+                class="min-w-[52px] h-9 px-3 rounded border text-sm transition
+                       {{ active ? 'bg-black text-white border-black' : 'bg-white text-gray-900 border-gray-400 hover:border-black' }}
+                       {{ d.is_out ? 'opacity-40 cursor-not-allowed' : '' }}"
+                data-detail-id="{{ d.id }}"
+                {% if d.is_out %}disabled aria-disabled="true"{% endif %}>
+          {{ d.name }}
+        </button>
+      {% endfor %}
+    </div>
+  {% endif %}
 </div>
 
-{# مرّر كل الخيارات كما هي (حتى نتمكّن من بناء الحبوب من الحقل الأصلي عند الحاجة) #}
-{% if has_opts %}
-  <div class="mt-4" id="native-options">
-    <salla-product-options options="{{ product.options }}" product-id="{{ product.id }}"></salla-product-options>
+{% if filtered|length %}
+  <div id="native-options" class="mt-4">
+    <salla-product-options options="{{ filtered }}" product-id="{{ product.id }}"></salla-product-options>
   </div>
 {% endif %}
 
 <script>
-(function () {
-  var KNOWN_ID   = {{ SIZE_OPTION_ID }};
-  var pillsHost  = document.getElementById('size-pills');
-  var hiddenInp  = document.getElementById('size-input');
-  var nativeHost = document.getElementById('native-options');
+(function(){
+  var pills = document.getElementById('size-pills');
+  var hidden = document.getElementById('size-input');
+  if(!pills || !hidden) return;
 
-  if (!pillsHost || !hiddenInp) return;
-
-  // 1) لو الـTwig لقَط المقاس والداتا موجودة، ابني من الداتا (server-side)
-  {% if size_option and size_option.details is defined and size_option.details|length %}
-    (function buildFromData(){
-      var current = hiddenInp.value || '{{ (size_option.details|first).id }}';
-      var details = {{ size_option.details|json_encode|raw }};
-
-      pillsHost.innerHTML = '';
-      details.forEach(function(d){
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.dataset.detailId = d.id;
-        btn.textContent = d.name;
-        btn.disabled = !!d.is_out;
-        btn.className = [
-          'min-w-[52px]','h-9','px-3','rounded','border','text-sm','transition',
-          (String(d.id) === String(current) ? 'bg-black text-white border-black'
-                                            : 'bg-white text-gray-900 border-gray-400 hover:border-black'),
-          (d.is_out ? 'opacity-40 cursor-not-allowed' : '')
-        ].join(' ');
-        pillsHost.appendChild(btn);
-      });
-    })();
-  {% else %}
-    // 2) فشل الالتقاط من الداتا => ابني من الحقل الأصلي داخل الويب-كمبوننت كـ fallback
-    function findSizeSelect() {
-      if (!nativeHost) return null;
-      // جرّب بالـID المعروف أولاً
-      var byId = nativeHost.querySelector('select[name="options['+KNOWN_ID+']"]');
-      if (byId) return byId;
-      // وإلا التقط أول select يحمل name يبدأ بـ options[
-      var any = nativeHost.querySelector('select[name^="options["]');
-      return any || null;
-    }
-
-    function buildFromNative() {
-      var selectEl = findSizeSelect();
-      if (!selectEl) return;
-
-      // استخرج الـ OptionId من name="options[123]"
-      var m = selectEl.name.match(/^options\[(\d+)\]$/);
-      if (m) {
-        hiddenInp.name  = 'options['+ m[1] +']';
-      }
-
-      // القيمة الحالية
-      var current = selectEl.value;
-
-      pillsHost.innerHTML = '';
-      Array.prototype.forEach.call(selectEl.options, function(opt){
-        if (!opt.value) return; // تجاهل placeholder "اختر"
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.dataset.detailId = opt.value;
-        btn.textContent = opt.textContent.trim();
-        btn.disabled = !!opt.disabled || opt.getAttribute('aria-disabled') === 'true';
-        btn.className = [
-          'min-w-[52px]','h-9','px-3','rounded','border','text-sm','transition',
-          (opt.value === current ? 'bg-black text-white border-black'
-                                 : 'bg-white text-gray-900 border-gray-400 hover:border-black'),
-          (btn.disabled ? 'opacity-40 cursor-not-allowed' : '')
-        ].join(' ');
-        pillsHost.appendChild(btn);
-      });
-
-      // أخفِ صفّ الحقل الأصلي بالكامل
-      var row = selectEl.closest('.form-group, .s-form-group, .product-option, section, .field, div');
-      if (row) row.style.display = 'none';
-
-      // ضَع القيمة المبدئية في الـ hidden
-      if (current) hiddenInp.value = current;
-
-      // لو تأخّر الويب-كمبوننت في الريندر، راقب إلى أن يظهر
-      new MutationObserver(function(){
-        var sel = findSizeSelect();
-        if (sel && sel !== selectEl) {
-          selectEl = sel;
-          buildFromNative(); // أعد البناء بالقيمة الجديدة
-        }
-      }).observe(nativeHost, { childList: true, subtree: true });
-    }
-
-    buildFromNative();
-  {% endif %}
-
-  // 3) تفعيل النقر على الحبوب (يعمل في الحالتين)
-  pillsHost.addEventListener('click', function(e){
+  pills.addEventListener('click', function(e){
     var btn = e.target.closest('button[data-detail-id]');
-    if (!btn || btn.disabled) return;
+    if(!btn || btn.disabled) return;
+    hidden.value = btn.getAttribute('data-detail-id');
+    hidden.dispatchEvent(new Event('change', {bubbles:true}));
 
-    var val = btn.getAttribute('data-detail-id');
-    hiddenInp.value = val;
-    hiddenInp.dispatchEvent(new Event('change', { bubbles: true }));
-
-    // بدّل الشكل
-    var all = pillsHost.querySelectorAll('button[data-detail-id]');
-    for (var i=0; i<all.length; i++){
-      all[i].classList.remove('bg-black','text-white','border-black');
-      all[i].classList.add('bg-white','text-gray-900','border-gray-400');
-    }
+    pills.querySelectorAll('button[data-detail-id]').forEach(function(b){
+      b.classList.remove('bg-black','text-white','border-black');
+      b.classList.add('bg-white','text-gray-900','border-gray-400');
+    });
     btn.classList.remove('bg-white','text-gray-900','border-gray-400');
     btn.classList.add('bg-black','text-white','border-black');
-
-    // حدّث الـ select الأصلي إن وجد (عشان تكامل سلة)
-    if (nativeHost) {
-      var sel = nativeHost.querySelector('select[name="'+ hiddenInp.name +'"]');
-      if (sel) {
-        sel.value = val;
-        sel.dispatchEvent(new Event('change', { bubbles: true }));
-      }
-    }
   });
 })();
 </script>
