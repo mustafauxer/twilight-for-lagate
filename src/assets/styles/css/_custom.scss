@@ -1,32 +1,210 @@
-/* زر السلة بالأسود — نطبّق على الـhost نفسه */
-salla-add-product-button.s-add-to-cart--black{
-  background:#000 !important;
-  color:#fff !important;
+/* اخفاء الويب كومبوننت بصريًا */
+.salla-btn-hidden{
+  position:absolute !important;
+  inset:0 !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+}
 
-  /* شكل زر محترم */
-  display:flex;            /* علشان نوسّط النص عموديًا */
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  height:56px;
-  border-radius:12px;
+/* الزر الأسود */
+.btn-addtocart-black{
+  display:flex; align-items:center; justify-content:center;
+  height:56px; border-radius:12px; width:100%;
+  background:#000; color:#fff; font-weight:700; text-transform:uppercase;
+  transition:background .2s ease; cursor:pointer; border:none;
+}
+.btn-addtocart-black:hover{ background:#111; }
+.btn-addtocart-black:focus-visible{ outline:3px solid rgba(255,255,255,.9); outline-offset:2px; }
+.btn-addtocart-black[disabled]{ opacity:.6; cursor:not-allowed; }
 
-  text-transform:uppercase;
-  font-weight:700;
-  transition:background .2s ease;
+
+
+
+
+
+/* ==== Product gallery styles ==== */
+
+/* thumbs column */
+.pg-thumbs { /* تظهر تلقائيًا على الشاشات >= md عبر الكلاس اللي فوق */ }
+.pg-thumb {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: box-shadow .15s ease, border-color .15s ease, transform .15s ease;
+}
+.pg-thumb:hover { border-color: #111; }
+.pg-thumb.is-active { border-color:#000; box-shadow: inset 0 0 0 2px #000; }
+
+/* arrows */
+.pg-nav{
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:36px; height:36px; border-radius:9999px;
+  display:grid; place-items:center;
+  background:#fff; border:1px solid #E5E7EB;  /* gray-200 */
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+  z-index: 5;
+}
+.pg-nav i{ font-size:18px; line-height:1; color:#374151; } /* gray-700 */
+.pg-nav:hover{ background:#F9FAFB; border-color:#D1D5DB; box-shadow: 0 3px 12px rgba(0,0,0,.08); }
+.pg-prev{ left:10px; }
+.pg-next{ right:10px; }
+
+/* على الشاشات الصغيرة: خلي الثَمبنيلز تحت السلايدر تلقائيًا (hidden md:flex في الـHTML) */
+@media (max-width: 767px){
+  .pg-nav{ width:32px; height:32px; }
+}
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------------*/
+
+/* إزالة الاستدارة من السلايدر والصورة */
+.product-gallery .details-slider,
+.product-gallery .details-slider .swiper,
+.product-gallery .details-slider img {
+  border-radius: 0 !important;
+}
+
+/* شيل الخلفية الرمادي من السوايبر عشان ما تزقّ الأسهم */
+.product-gallery .details-slider .swiper {
+  background: transparent !important;
+  min-height: 560px; /* سيبها مؤقتًا لتثبيت الارتفاع، هنقللها لو حبيت */
+}
+
+/*-----------------------------*/
+/* ==== Arrows like the reference (no pills) ==== */
+.product-gallery { position: relative; }
+.product-gallery .pg-nav{
+  all: unset;                           /* امسح أي ستايل قديم */
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px;                         /* مساحة نقر مريحة */
+  line-height: 1;
+  cursor: pointer;
+  z-index: 5;
+}
+.product-gallery .pg-nav i{
+  font-size: 28px;                      /* حجم السهم */
+  color: #111;                          /* مثل المرجع */
+  opacity: .85;
+  transition: opacity .15s ease, transform .15s ease;
+}
+.product-gallery .pg-nav:hover i{
+  opacity: 1;
+  transform: translateX(0);             /* تأثير بسيط */
+}
+.product-gallery .pg-prev{ left: 4%; }  /* إدخال السهم للداخل */
+.product-gallery .pg-next{ right: 4%; } /* إدخال السهم للداخل */
+
+/* اختياري: أخفِ الدوائر القديمة لو فيه بقايا */
+.product-gallery .pg-nav::before,
+.product-gallery .pg-nav::after{ display:none !important; }
+
+
+/* اخفاء أي أسهم افتراضية من سوايبر داخل معرض المنتج */
+.product-gallery .swiper-button-next,
+.product-gallery .swiper-button-prev,
+.product-gallery [class*="swiper-button"]{
+  display: none !important;
+}
+
+/* تأكد أن وعاء السلايدر موضوعي علشان z-index يشتغل */
+.product-gallery .details-slider,
+.product-gallery .details-slider .swiper{
+  position: relative;
+}
+
+/* أسهمنا — بدون دوائر، قابلة للنقر، فوق كل شيء */
+.product-gallery .pg-nav{
+  all: unset;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;                 /* أعلى من السلايد */
+  cursor: pointer;
+  pointer-events: auto;
+  padding: 8px;
+  line-height: 1;
+}
+.product-gallery .pg-prev{ left: 4%; }
+.product-gallery .pg-next{ right: 4%; }
+.product-gallery .pg-nav i{
+  font-size: 28px;
+  color: #111;
+  opacity: .9;
+  transition: opacity .15s ease;
+}
+.product-gallery .pg-nav:hover i{ opacity: 1; }
+
+
+
+/*-----------------------------*/
+/* Thumbs: no rounded */
+.pg-thumb { 
+  border-radius: 0 !important; 
+}
+.pg-thumb img{
+  border-radius: 0 !important;
+}
+
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------------*/
+/* ====== Remove ALL rounded corners on product page ====== */
+
+/* 1) زر الإضافة للسلة */
+.btn-addtocart-black{ border-radius: 0 !important; }
+
+/* 2) حبوب المقاسات */
+#size-pills button{ border-radius: 0 !important; }
+
+/* 3) كمية (الويب-كمبوننت) */
+salla-quantity-input{ --s-qty-border-radius: 0 !important; }        /* لو المكوّن بيدعم المتغيّر */
+salla-quantity-input::part(button),
+salla-quantity-input::part(input){ border-radius: 0 !important; }  /* فالباك أكيد */
+
+/* 4) معاينة اللون (Selected Color) */
+#color-thumbs .color-thumb,
+#color-thumbs .color-thumb img{ border-radius: 0 !important; }
+
+/* 5) الثمبنيلز العمودية للمعرض */
+.pg-thumb, .pg-thumb img{ border-radius: 0 !important; }
+
+/* 6) السلايدر الرئيسي والصورة داخله */
+.product-gallery .details-slider,
+.product-gallery .details-slider .swiper,
+.product-gallery .details-slider img{ border-radius: 0 !important; }
+
+/* 7) أي أزرار/مربعات عامة داخل فورم المنتج (تسطيح شامل) */
+.form.product-form .rounded,
+.form.product-form [class*="rounded"]{ border-radius: 0 !important; }
+
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------------*/
+/* ===== Find My Size like Check in Store ===== */
+.find-my-size-link{
+  color:#111;                       /* نفس لون Check in Store */
+  text-decoration: underline;       /* خط سفلي دائم لتوضيح أنها قابلة للنقر */
+  font-weight:500;
   cursor:pointer;
 }
-
-/* هوفر */
-salla-add-product-button.s-add-to-cart--black:hover{
-  background:#111 !important;
+.find-my-size-link:hover{
+  text-decoration: underline;       /* ثابت */
+  color:#000;
+}
+.find-my-size-link .sicon-keyboard_arrow_right{
+  font-size:14px;
+  line-height:1;
 }
 
-/* حالة التعطيل لو ظهرت */
-salla-add-product-button.s-add-to-cart--black[disabled],
-salla-add-product-button.s-add-to-cart--black[aria-disabled="true"]{
-  opacity:.6;
-  cursor:not-allowed;
+/* حالة غير مفعّلة */
+.find-my-size-link.is-disabled{
+  color:#D1D5DB;
+  text-decoration: none;
+  cursor: default;
 }
-
-@use 'custom' as *;  // لازم يكون في آخر الملف
