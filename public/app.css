@@ -2162,6 +2162,11 @@ select{
     color: rgba(255, 255, 255, 1);
     color: rgba(255, 255, 255, var(--tw-text-opacity, 1));
 }
+.text-gray-300{
+    --tw-text-opacity: 1;
+    color: rgba(209, 213, 219, 1);
+    color: rgba(209, 213, 219, var(--tw-text-opacity, 1));
+}
 .underline{
     text-decoration-line: underline;
 }
@@ -23392,6 +23397,11 @@ body.font-dinnextltarabic-regular .btn--add-to-cart {
 .hover\:text-primary:hover{
     color: #414042;
     color: var(--color-primary);
+}
+.hover\:text-gray-700:hover{
+    --tw-text-opacity: 1;
+    color: rgba(55, 65, 81, 1);
+    color: rgba(55, 65, 81, var(--tw-text-opacity, 1));
 }
 .hover\:underline:hover{
     text-decoration-line: underline;
