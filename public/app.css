@@ -1010,10 +1010,6 @@ select{
     margin-left: -1.5rem;
     margin-right: -1.5rem;
 }
-.mx-1{
-    margin-left: 0.25rem;
-    margin-right: 0.25rem;
-}
 .mx-1\.5{
     margin-left: 0.375rem;
     margin-right: 0.375rem;
@@ -1079,9 +1075,6 @@ select{
 }
 .mr-1{
     margin-right: 0.25rem;
-}
-.mr-2{
-    margin-right: 0.5rem;
 }
 .mt-0{
     margin-top: 0px;
@@ -1965,9 +1958,6 @@ select{
 .text-start{
     text-align: left;
 }
-.text-end{
-    text-align: right;
-}
 .text-2xl{
     font-size: 1.5rem;
     line-height: 2rem;
@@ -2064,11 +2054,6 @@ select{
 .\!text-primary{
     color: #414042 !important;
     color: var(--color-primary) !important;
-}
-.\!text-red-800{
-    --tw-text-opacity: 1 !important;
-    color: rgba(153, 27, 27, 1) !important;
-    color: rgba(153, 27, 27, var(--tw-text-opacity, 1)) !important;
 }
 .\!text-white{
     --tw-text-opacity: 1 !important;
@@ -23820,11 +23805,6 @@ salla-installment * {
 .last\:border-none:last-child{
     border-style: none;
 }
-.even\:border-gray-200:nth-child(even){
-    --tw-border-opacity: 1;
-    border-color: rgba(229, 231, 235, 1);
-    border-color: rgba(229, 231, 235, var(--tw-border-opacity, 1));
-}
 .target\:btn:target{
     display: inline-flex;
     flex: 1 1 0%;
@@ -23882,11 +23862,6 @@ salla-installment * {
     box-shadow: 0 0 rgba(0,0,0,0), 0 0 rgba(0,0,0,0), 5px 10px 30px #2B2D340D;;
     box-shadow: var(--tw-ring-offset-shadow, 0 0 rgba(0,0,0,0)), var(--tw-ring-shadow, 0 0 rgba(0,0,0,0)), var(--tw-shadow);
 }
-.group:hover .group-hover\:-translate-x-1{
-    --tw-translate-x: -0.25rem;
-    transform: translate(-0.25rem, var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
 .group:hover .group-hover\:scale-\[1\.03\]{
     --tw-scale-x: 1.03;
     --tw-scale-y: 1.03;
@@ -23894,9 +23869,6 @@ salla-installment * {
     transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 @media (min-width: 640px){
-    .sm\:col-span-2{
-        grid-column: span 2 / span 2;
-    }
     .sm\:row-span-2{
         grid-row: span 2 / span 2;
     }
@@ -23912,17 +23884,11 @@ salla-installment * {
     .sm\:mb-8{
         margin-bottom: 2rem;
     }
-    .sm\:mt-0{
-        margin-top: 0px;
-    }
     .sm\:mt-8{
         margin-top: 2rem;
     }
     .sm\:block{
         display: block;
-    }
-    .sm\:grid{
-        display: grid;
     }
     .sm\:h-auto{
         height: auto;
@@ -23988,9 +23954,6 @@ salla-installment * {
 @media (min-width: 768px){
     .md\:sticky{
         position: sticky;
-    }
-    .md\:-mb-2{
-        margin-bottom: -0.5rem;
     }
     .md\:mb-0{
         margin-bottom: 0px;
@@ -24410,9 +24373,6 @@ salla-installment * {
 .ltr\:text-end:where([dir="ltr"], [dir="ltr"] *){
     text-align: right;
 }
-.ltr\:even\:border-l:nth-child(even):where([dir="ltr"], [dir="ltr"] *){
-    border-left-width: 1px;
-}
 @media (min-width: 640px){
     .sm\:ltr\:text-left:where([dir="ltr"], [dir="ltr"] *){
         text-align: left;
@@ -24563,9 +24523,6 @@ salla-installment * {
 }
 .rtl\:text-start:where([dir="rtl"], [dir="rtl"] *){
     text-align: left;
-}
-.rtl\:even\:border-r:nth-child(even):where([dir="rtl"], [dir="rtl"] *){
-    border-right-width: 1px;
 }
 @media (min-width: 640px){
     .sm\:rtl\:text-right:where([dir="rtl"], [dir="rtl"] *){
