@@ -587,6 +587,14 @@
                     {% endif %}
 
 
+                    {# … تحت زر ADD TO CART وويدجت الأقساط … #}
+
+                    {% if product.has_metadata %}
+                        <section class="pdp-accordions">
+                            <salla-metadata></salla-metadata>
+                        </section>
+                    {% endif %}
+
 
 
                     {# خيار B (احتياطي): زر HTML لو عايز تلغي الويب-كمبوننت نهائيًا #}
@@ -660,10 +668,10 @@
         <salla-comments item-id="{{product.id}}" type="product"></salla-comments>
     {% endif %}
     
-    {# Similar Products Area #}
+    {# Similar Products Area 
     <div class="container">
         <salla-products-slider source="related" source-value="{{product.id}}" block-title="{{trans('pages.products.similar_products')}}" display-all-url></salla-products-slider>
-    </div>
+    </div>#}
 {% endblock %}
 
 
