@@ -1026,6 +1026,10 @@ select{
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
 }
+.my-8{
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
 .-mb-52{
     margin-bottom: -13rem;
 }
@@ -23816,116 +23820,50 @@ salla-installment * {
   border-top: 1px solid #E5E7EB;
 }
 /*-----------------------------------------------------------------------------------------------------------------Home Page----------*/
-/* ==== Hero frame ==== */
-.hero-frame {
-  background: #fff;
-  padding: max(12px, min(1.6vw, 22px));
-}
-.hero-wrap {
-  position: relative;
-}
-/* الصورة: ارتفاع وفوكس مناسبين للّقطة */
-.hero-img {
-  width: 100%;
-  display: block;
-  height: 72vh;
-  -o-object-fit: cover;
-     object-fit: cover;
-  -o-object-position: 62% 44%;
-     object-position: 62% 44%; /* عدّلها لو حابب تحرّك الفوكس يمين/يسار */
-}
-/* أوفرلاي متمركز أسفل الصورة */
-.hero-overlay {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  pointer-events: none;
-  display: flex;
-  align-items: flex-end;
+.btn-home-outline {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  padding-bottom: max(22px, min(4.2vw, 48px));
-}
-.hero-copy {
-  text-align: center;
-  transform: translateY(6%); /* ينزل شوية زي المرجع */
-}
-/* عنوان ضخم أبيض بظل خفيف */
-.hero-title {
-  color: #fff;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  line-height: 1.08;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
-  margin: 0;
-}
-.hero-title.mega {
-  font-size: max(28px, min(5.8vw, 64px));
-}
-/* زر شفاف بإطار أبيض — متمركز تحت العنوان */
-.btn-outline.hero-cta {
-  display: inline-block;
-  margin-top: 14px;
-  padding: 10px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.95);
-  color: #fff;
+  min-width: 140px;
+  height: 42px;
+  padding: 0 18px;
+  border: 1px solid #111;
+  color: #111;
+  background: #fff;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  background: rgba(0, 0, 0, 0.18);
-  -webkit-backdrop-filter: saturate(140%) blur(1.5px);
-          backdrop-filter: saturate(140%) blur(1.5px);
-  pointer-events: auto;
-  -webkit-text-decoration: none;
-  text-decoration: none;
+  transition: all 0.15s;
 }
-.btn-outline.hero-cta:hover {
-  background: rgba(0, 0, 0, 0.28);
-}
-/* أيقونة Scroll أسفل يسار */
-.scroll-hint {
-  position: absolute;
-  left: max(14px, min(2vw, 24px));
-  bottom: max(12px, min(2.6vw, 28px));
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  display: grid;
-  align-items: center;
-  justify-items: center;
-  place-items: center;
+.btn-home-outline:hover {
+  background: #111;
   color: #fff;
-  background: rgba(0, 0, 0, 0.15);
-  pointer-events: auto;
-  -webkit-text-decoration: none;
-  text-decoration: none;
 }
-.scroll-hint:hover {
-  background: rgba(0, 0, 0, 0.25);
+.btn-home-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 14px;
+  color: #111;
+  border: 1px solid transparent;
+  background: transparent;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: all 0.15s;
 }
-.scroll-dot {
-  font-size: 18px;
-  line-height: 1;
-  transform: translateY(-1px);
+.btn-home-ghost:hover {
+  border-color: #111;
 }
-/* موبايل: تكبير العنوان قليلًا وتوسيط دقيق */
-@media (max-width: 640px) {
-  .hero-copy {
-    transform: none;
-  }
-  .hero-title.mega {
-    font-size: max(26px, min(9vw, 34px));
-  }
-  .btn-outline.hero-cta {
-    padding: 9px 14px;
-  }
-  .scroll-hint {
-    width: 34px;
-    height: 34px;
-  }
+.home-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.home-section-head .spacer {
+  flex: 1 1 auto;
 }
 .before\:text-orange-300::before{
     content: var(--tw-content);
@@ -24105,6 +24043,10 @@ salla-installment * {
 @media (min-width: 768px){
     .md\:sticky{
         position: sticky;
+    }
+    .md\:my-12{
+        margin-top: 3rem;
+        margin-bottom: 3rem;
     }
     .md\:my-8{
         margin-top: 2rem;
