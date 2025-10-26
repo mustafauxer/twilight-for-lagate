@@ -274,3 +274,83 @@ salla-installment *{
 @media (min-width: 768px){
   .pdp-installments{ margin-top: 14px; }
 }
+/* أظهر ودجت الأقساط قسرًا لو كان حد مخبّيه */
+salla-installment,
+salla-installment *{
+  display: block !important;
+  visibility: visible !important;
+  border-radius: 0 !important;
+}
+.pdp-installments{
+  margin-top: 12px !important;
+  padding-top: 12px;
+  border-top: 1px solid #E5E7EB;
+}
+
+
+
+
+/*-----------------------------------------------------------------------------------------------------------------Home Page----------*/
+/* ==== Hero frame ==== */
+.hero-frame{ background:#fff; padding: clamp(12px, 1.6vw, 22px); }
+.hero-wrap{ position: relative; }
+
+/* الصورة: ارتفاع وفوكس مناسبين للّقطة */
+.hero-img{
+  width:100%; display:block;
+  height: clamp(60vh, 72vh, 78vh);
+  object-fit: cover;
+  object-position: 62% 44%; /* عدّلها لو حابب تحرّك الفوكس يمين/يسار */
+}
+
+/* أوفرلاي متمركز أسفل الصورة */
+.hero-overlay{
+  position:absolute; inset:0; pointer-events:none;
+  display:flex; align-items:flex-end; justify-content:center;
+  padding-bottom: clamp(22px, 4.2vw, 48px);
+}
+.hero-copy{
+  text-align:center;
+  transform: translateY(6%); /* ينزل شوية زي المرجع */
+}
+
+/* عنوان ضخم أبيض بظل خفيف */
+.hero-title{
+  color:#fff; font-weight:800; letter-spacing:.12em;
+  text-transform:uppercase; line-height:1.08;
+  text-shadow:0 2px 18px rgba(0,0,0,.35);
+  margin:0;
+}
+.hero-title.mega{ font-size: clamp(28px, 5.8vw, 64px); }
+
+/* زر شفاف بإطار أبيض — متمركز تحت العنوان */
+.btn-outline.hero-cta{
+  display:inline-block; margin-top:14px; padding: 10px 16px;
+  border:1px solid rgba(255,255,255,.95); color:#fff; font-weight:600;
+  letter-spacing:.06em; text-transform:uppercase;
+  background: rgba(0,0,0,.18); backdrop-filter:saturate(140%) blur(1.5px);
+  pointer-events:auto; text-decoration:none;
+}
+.btn-outline.hero-cta:hover{ background: rgba(0,0,0,.28); }
+
+/* أيقونة Scroll أسفل يسار */
+.scroll-hint{
+  position:absolute; left: clamp(14px, 2vw, 24px); bottom: clamp(12px, 2.6vw, 28px);
+  width:36px; height:36px; border-radius:50%;
+  border:1px solid rgba(255,255,255,.8);
+  display:grid; place-items:center; color:#fff;
+  background: rgba(0,0,0,.15);
+  pointer-events:auto; text-decoration:none;
+}
+.scroll-hint:hover{ background: rgba(0,0,0,.25); }
+.scroll-dot{ font-size:18px; line-height:1; transform: translateY(-1px); }
+
+/* موبايل: تكبير العنوان قليلًا وتوسيط دقيق */
+@media (max-width: 640px){
+  .hero-copy{ transform:none; }
+  .hero-title.mega{ font-size: clamp(26px, 9vw, 34px); }
+  .btn-outline.hero-cta{ padding: 9px 14px; }
+  .scroll-hint{ width:34px; height:34px; }
+}
+
+

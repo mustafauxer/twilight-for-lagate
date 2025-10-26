@@ -6,15 +6,38 @@
 | page.slug        | string     | ex: "cat.show"                                                      |
 #}
 {% extends "layouts.master" %}
-{% block content %}
-    {% include 'components/home/enhanced-slider.twig' %}
 
-    <section class="container my-6">
-        <h1 class="text-2xl font-bold">أهلاً بكم في متجر عباءات</h1>
-        <p class="mt-2">شحن سريع – استبدال خلال 14 يوم.</p>
+{% block content %}
+    <!-- ===== HERO (ثابت، بدون كومبوننت) ===== -->
+    <section class="home-hero container mx-auto my-6 md:my-8">
+        <div class="hero-frame">
+            <div class="hero-wrap">
+                <img
+                    src="{{ 'images/home-hero.png' | asset }}"
+                    alt="Summer Collection 2025"
+                    class="hero-img" />
+
+                <!-- نص متمركز أسفل الصورة -->
+            <div class="hero-overlay hero-bottom-center">
+                <div class="hero-copy">
+                <h2 class="hero-title mega">SUMMER COLLECTION 2025</h2>
+                <a href="/products" class="btn-outline hero-cta">تسوّقي من كولكشن الصيف ٢٠٢٥</a>
+                </div>
+            </div>
+
+                <!-- أيقونة سكرول اختيارية -->
+                <a href="#shop-row" class="scroll-hint" aria-label="Scroll to products"><span class="scroll-dot">↓</span></a>
+            </div>
+        </div>
     </section>
-    {% component home %}
+
+    <section id="shop-row"></section>
+
+    {# هنمل سيكشن المنتجات  #}
+    <section id="shop-row"></section>
+
 {% endblock %}
+
 {% block scripts %}
     <script defer src="{{ 'home.js' | asset }}"></script>
 {% endblock %}
