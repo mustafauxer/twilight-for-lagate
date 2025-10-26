@@ -8,35 +8,10 @@
 {% extends "layouts.master" %}
 
 {% block content %}
-    <!-- ===== HERO (ثابت، بدون كومبوننت) ===== -->
-    <section class="home-hero container mx-auto my-6 md:my-8">
-        <div class="hero-frame">
-            <div class="hero-wrap">
-                <img
-                    src="{{ 'images/home-hero.png' | asset }}"
-                    alt="Summer Collection 2025"
-                    class="hero-img" />
-
-                <!-- نص متمركز أسفل الصورة -->
-            <div class="hero-overlay hero-bottom-center">
-                <div class="hero-copy">
-                <h2 class="hero-title mega">SUMMER COLLECTION 2025</h2>
-                <a href="/products" class="btn-outline hero-cta">تسوّقي من كولكشن الصيف ٢٠٢٥</a>
-                </div>
-            </div>
-
-                <!-- أيقونة سكرول اختيارية -->
-                <a href="#shop-row" class="scroll-hint" aria-label="Scroll to products"><span class="scroll-dot">↓</span></a>
-            </div>
-        </div>
-    </section>
-
-    <section id="shop-row"></section>
-
-    {# هنمل سيكشن المنتجات  #}
-    <section id="shop-row"></section>
-
+  {# منطقة عناصر الصفحة الرئيسية التي يحقنها محرّر سلة #}
+  {% component_area 'homepage' %}
 {% endblock %}
+
 
 {% block scripts %}
     <script defer src="{{ 'home.js' | asset }}"></script>
