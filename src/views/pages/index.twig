@@ -5,14 +5,17 @@
 | page.title       | string     | *could be html                                                      |
 | page.slug        | string     | ex: "cat.show"                                                      |
 #}
-{% extends "layouts.master" %}
+{% extends "layouts/master.twig" %}
 
 {% block content %}
-  {# منطقة عناصر الصفحة الرئيسية التي يحقنها محرّر سلة #}
-  {% component_area 'homepage' %}
+  <main class="home">
+    <div id="homepage-components">
+      {{ homepage_components|raw }}
+    </div>
+  </main>
 {% endblock %}
-
 
 {% block scripts %}
-    <script defer src="{{ 'home.js' | asset }}"></script>
+  <script defer src="{{ 'home.js' | asset }}"></script>
 {% endblock %}
+
