@@ -5,7 +5,7 @@
 | page.title       | string     | *could be html                                                      |
 | page.slug        | string     | ex: "cat.show"                                                      |
 #}
-{% extends "layouts/master.twig" %}
+{% extends "layouts.master" %}
 
 {% block content %}
   <main class="home">
@@ -18,4 +18,3 @@
 {% block scripts %}
   <script defer src="{{ 'home.js' | asset }}"></script>
 {% endblock %}
-

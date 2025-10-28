@@ -214,7 +214,41 @@
             "required": false,
             "value": false,
             "selected": false
+        },
+        {
+        "type": "url",
+        "id": "home_shop_all_link",
+        "label": "رابط زر SHOP ALL",
+        "format": "url",
+        "required": false
+        },
+        {
+        "type": "select",
+        "id": "home_products_source",
+        "label": "مصدر المنتجات في سلايدر الهوم",
+        "options": [
+            { "label": "أحدث المنتجات", "value": "latest" },
+            { "label": "الأكثر مبيعًا", "value": "bestSell" },
+            { "label": "عشوائي", "value": "random" },
+            { "label": "تصنيف محدد", "value": "category" }
+        ],
+        "default": "latest"
+        },
+        {
+        "type": "number",
+        "id": "home_products_category_id",
+        "label": "ID التصنيف (يُستخدم إذا اخترت تصنيف محدد)"
+        },
+        {
+        "type": "range",
+        "id": "home_products_per_view",
+        "label": "عدد العناصر في العرض",
+        "min": 2,
+        "max": 6,
+        "step": 1,
+        "default": 4
         }
+
     ],
     "components": [
         {

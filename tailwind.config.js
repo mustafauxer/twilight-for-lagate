@@ -138,4 +138,12 @@ module.exports = {
       require('@tailwindcss/forms'),
       require('@tailwindcss/line-clamp'),
     ],
+    safelist: [
+    'min-h-[300px]',
+    'lg:min-h-[528px]',
+    'bg-cover',
+    'bg-center',
+    'absolute',
+    'inset-0'
+    ]
 }

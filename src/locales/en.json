@@ -26,7 +26,8 @@
     "products": {
       "rate": "Rate",
       "size_options": "Size Options",
-      "find_my_size": "Find My Size"
+      "find_my_size": "Find My Size",
+      "selected_color": "Selected Color"
     }
   },
   "common": {

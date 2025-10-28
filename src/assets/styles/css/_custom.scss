@@ -388,3 +388,9 @@ section[data-component="home.enhanced-slider"] .swiper-pagination{
 
 
 
+
+/* لا تجعل السلايدر ينهار ارتفاعه */
+.s-block.--hero-slider .swiper-slide { min-height: 360px; }
+@media (min-width: 1024px) {
+  .s-block.--hero-slider .swiper-slide { min-height: 520px; }
+}

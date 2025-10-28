@@ -24,7 +24,10 @@
       "option_content": "المحتوى"
     },
     "products": {
-      "rate": "قيم هذا المنتج"
+      "rate": "قيم هذا المنتج",
+      "size_options": "خيارات المقاس",
+      "find_my_size": "اعرف مقاسي",
+      "selected_color": "اللون المختار"
     }
   },
   "common": {
