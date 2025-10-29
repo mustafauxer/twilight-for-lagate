@@ -1,6 +1,6 @@
 {
   "name": {
-    "ar": "twilight-for-lagate",
+    "ar": "لاقيت",
     "en": "twilight-for-lagate"
   },
   "theme_id": "6551982",
@@ -568,18 +568,10 @@
           ]
         }
       ]
-    },
-
-    {
-      "key": "test-block-001",
-      "title": "كتلة اختبار",
-      "icon": "sicon-layout-grid",
-      "path": "home.test-block",
-      "is_default": false,
-      "fields": []
     }
   ],
 
   "support_url": "https://github.com/mustafauxer?tab=repositories",
-  "description": { "ar": "", "en": "" }
+  "description": { "ar": "مجموعة كبيرة من المزايا لدعم تجارتك وتقديم تجربة تسوق مثيرة لعملائك",
+                   "en": "A wide range of features to support your business and provide an exciting shopping experience for your customers" }
 }
