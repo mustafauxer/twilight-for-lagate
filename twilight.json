@@ -4,10 +4,8 @@
     "en": "twilight-for-lagate"
   },
   "theme_id": "6551982",
-
   "repository": "mustafauxer/twilight-for-lagate",
   "branch": "master",
-
   "author_email": "mustafamo.ibrahim@gmail.com",
 
   "features": [
@@ -38,11 +36,23 @@
       "label": "طريقة عرض الصور في قسم قائمة عناصر ",
       "icon": "sicon-list",
       "selected": [
-        { "label": "اظهار الصورة كاملةً في المنتصف (Contain)", "value": "contain", "key": "f4adec13-6e4c-654b-b978-b2807935ced9" }
+        {
+          "label": "اظهار الصورة كاملةً في المنتصف (Contain)",
+          "value": "contain",
+          "key": "f4adec13-6e4c-654b-b978-b2807935ced9"
+        }
       ],
       "options": [
-        { "label": "تغطية الصورة كامل المساحة مع المحافظة على أبعاد الصورة (Cover)", "value": "cover", "key": "e9c8ea8f-c5c6-234e-935-3bce269afde4" },
-        { "label": "اظهار الصورة كاملةً في المنتصف (Contain)", "value": "contain", "key": "f4adec13-6e4c-654b-b978-b2807935ced9" }
+        {
+          "label": "تغطية الصورة كامل المساحة مع المحافظة على أبعاد الصورة (Cover)",
+          "value": "cover",
+          "key": "e9c8ea8f-c5c6-234e-935-3bce269afde4"
+        },
+        {
+          "label": "اظهار الصورة كاملةً في المنتصف (Contain)",
+          "value": "contain",
+          "key": "f4adec13-6e4c-654b-b978-b2807935ced9"
+        }
       ],
       "source": "Manual",
       "required": true
@@ -78,7 +88,6 @@
       "selected": true,
       "required": false
     },
-
     {
       "type": "boolean",
       "icon": "sicon-toggle-off",
@@ -89,7 +98,6 @@
       "selected": false,
       "required": false
     },
-
     {
       "type": "boolean",
       "icon": "sicon-toggle-off",
@@ -147,16 +155,27 @@
       "label": "طريقة عرض الصور في سليدر صور المنتج",
       "icon": "sicon-list",
       "selected": [
-        { "label": "اظهار الصورة كاملةً في المنتصف (Contain)", "value": "contain", "key": "f4adec13-6e4c-433b-b141-b2807935ced9" }
+        {
+          "label": "اظهار الصورة كاملةً في المنتصف (Contain)",
+          "value": "contain",
+          "key": "f4adec13-6e4c-433b-b141-b2807935ced9"
+        }
       ],
       "options": [
-        { "label": "تغطية الصورة كامل المساحة مع المحافظة على أبعاد الصورة (Cover)", "value": "cover", "key": "e9c8ea8f-c5c6-438e-9d45-3bce269afde4" },
-        { "label": "اظهار الصورة كاملةً في المنتصف (Contain)", "value": "contain", "key": "f4adec13-6e4c-433b-b141-b2807935ced9" }
+        {
+          "label": "تغطية الصورة كامل المساحة مع المحافظة على أبعاد الصورة (Cover)",
+          "value": "cover",
+          "key": "e9c8ea8f-c5c6-438e-9d45-3bce269afde4"
+        },
+        {
+          "label": "اظهار الصورة كاملةً في المنتصف (Contain)",
+          "value": "contain",
+          "key": "f4adec13-6e4c-433b-b141-b2807935ced9"
+        }
       ],
       "source": "Manual",
       "required": true
     },
-
     {
       "type": "boolean",
       "icon": "sicon-toggle-off",
@@ -183,9 +202,7 @@
       ],
       "default": "latest"
     },
-
     { "type": "number", "id": "home_products_category_id", "label": "ID التصنيف (يُستخدم إذا اخترت تصنيف محدد)" },
-
     { "type": "range", "id": "home_products_per_view", "label": "عدد العناصر في العرض", "min": 2, "max": 6, "step": 1, "default": 4 }
   ],
 
@@ -231,9 +248,39 @@
             }
           ],
           "fields": [
-            { "type": "string", "icon": "sicon-image", "id": "slides.image", "label": "صورة البنر", "format": "image", "required": true, "description": "* المقاس المناسب للصورة هو 900×600 بكسل" },
-            { "type": "string", "icon": "sicon-format-text-alt", "label": "عنوان رئيسي", "multilanguage": true, "id": "slides.title", "format": "text", "required": false, "minLength": 0, "maxLength": 100, "placeholder": "يمكنك إضافة عنوان بارز هنا..." },
-            { "type": "string", "icon": "sicon-typography", "label": "نص إضافي", "multilanguage": true, "id": "slides.description", "format": "textarea", "required": false, "minLength": 0, "maxLength": 255, "placeholder": "يمكنك إضافة تفاصيل إضافية هنا" }
+            {
+              "type": "string",
+              "icon": "sicon-image",
+              "id": "slides.image",
+              "label": "صورة البنر",
+              "format": "image",
+              "required": true,
+              "description": "* المقاس المناسب للصورة هو 900×600 بكسل"
+            },
+            {
+              "type": "string",
+              "icon": "sicon-format-text-alt",
+              "label": "عنوان رئيسي",
+              "multilanguage": true,
+              "id": "slides.title",
+              "format": "text",
+              "required": false,
+              "minLength": 0,
+              "maxLength": 100,
+              "placeholder": "يمكنك إضافة عنوان بارز هنا..."
+            },
+            {
+              "type": "string",
+              "icon": "sicon-typography",
+              "label": "نص إضافي",
+              "multilanguage": true,
+              "id": "slides.description",
+              "format": "textarea",
+              "required": false,
+              "minLength": 0,
+              "maxLength": 255,
+              "placeholder": "يمكنك إضافة تفاصيل إضافية هنا"
+            }
           ]
         }
       ]
@@ -247,14 +294,69 @@
       "image": "https://cdn.salla.sa/mQgZlG/c3AwZKb12ZRFFfK3vE0vaZYTePnFAUOiZA4dQBg1.png",
       "is_default": true,
       "fields": [
-        { "type": "static", "format": "description", "id": "with-bg", "value": "<div style='margin: -24px -20px 20px'><img class='w-full' src='https://cdn.salla.network/images/themes/raed/main-links-with-bg.jpg?v=1.1'></div>", "conditions": [{ "id": "merge_with_top_component", "operation": "=", "value": true }] },
-        { "type": "static", "format": "description", "id": "without-bg", "value": "<div style='padding-top:10px;margin-bottom:30px;border:1px solid #ebebeb;border-radius:5px;text-align:center;overflow:hidden'><h6 style='margin-bottom:10px'>معاينة العنصر</h6><img class='w-full' src='https://cdn.salla.network/images/themes/raed/preview-images/main-links.png?v=1.1'></div>", "conditions": [{ "id": "merge_with_top_component", "operation": "=", "value": false }] },
-        { "type": "string", "icon": "sicon-format-text-alt", "label": "العنوان", "multilanguage": true, "id": "title", "format": "text", "required": false, "minLength": 0, "maxLength": 100, "placeholder": "أدخل العنوان هنا..." },
-        { "type": "boolean", "icon": "sicon-toggle-off", "label": "دمج مع العنصر السابق", "id": "merge_with_top_component", "format": "switch", "value": false, "selected": false, "required": false },
-        { "type": "static", "format": "description", "id": "static-desc", "value": "<small style='margin: -36px 0 30px;display: block;'>* إزاحة كامل العنصر ومحتوياته مع العنصر السابق، وجعلهما يظهران كعنصر واحد متناسق، يكون ذا فائدة في حالة كان العنصر السابق هو (صور متحركة محسنة). </small>" },
-        { "type": "boolean", "icon": "sicon-toggle-off", "label": "عرض أسهم التحرك", "id": "show_controls", "format": "switch", "value": true, "selected": true, "required": false },
-        { "type": "boolean", "icon": "sicon-toggle-off", "label": "عرض روابط التصنيفات", "description": "يمكنك تحديد التصنيفات بدل العناصر الخاصة، مع امكانية عرض صورة التصنيف مع العنصر", "id": "show_cats", "format": "switch", "value": false, "selected": false, "required": false },
-
+        {
+          "type": "static",
+          "format": "description",
+          "id": "with-bg",
+          "value": "<div style='margin: -24px -20px 20px'><img class='w-full' src='https://cdn.salla.network/images/themes/raed/main-links-with-bg.jpg?v=1.1'></div>",
+          "conditions": [{ "id": "merge_with_top_component", "operation": "=", "value": true }]
+        },
+        {
+          "type": "static",
+          "format": "description",
+          "id": "without-bg",
+          "value": "<div style='padding-top:10px;margin-bottom:30px;border:1px solid #ebebeb;border-radius:5px;text-align:center;overflow:hidden'><h6 style='margin-bottom:10px'>معاينة العنصر</h6><img class='w-full' src='https://cdn.salla.network/images/themes/raed/preview-images/main-links.png?v=1.1'></div>",
+          "conditions": [{ "id": "merge_with_top_component", "operation": "=", "value": false }]
+        },
+        {
+          "type": "string",
+          "icon": "sicon-format-text-alt",
+          "label": "العنوان",
+          "multilanguage": true,
+          "id": "title",
+          "format": "text",
+          "required": false,
+          "minLength": 0,
+          "maxLength": 100,
+          "placeholder": "أدخل العنوان هنا..."
+        },
+        {
+          "type": "boolean",
+          "icon": "sicon-toggle-off",
+          "label": "دمج مع العنصر السابق",
+          "id": "merge_with_top_component",
+          "format": "switch",
+          "value": false,
+          "selected": false,
+          "required": false
+        },
+        {
+          "type": "static",
+          "format": "description",
+          "id": "static-desc",
+          "value": "<small style='margin: -36px 0 30px;display: block;'>* إزاحة كامل العنصر ومحتوياته مع العنصر السابق، وجعلهما يظهران كعنصر واحد متناسق، يكون ذا فائدة في حالة كان العنصر السابق هو (صور متحركة محسنة). </small>"
+        },
+        {
+          "type": "boolean",
+          "icon": "sicon-toggle-off",
+          "label": "عرض أسهم التحرك",
+          "id": "show_controls",
+          "format": "switch",
+          "value": true,
+          "selected": true,
+          "required": false
+        },
+        {
+          "type": "boolean",
+          "icon": "sicon-toggle-off",
+          "label": "عرض روابط التصنيفات",
+          "description": "يمكنك تحديد التصنيفات بدل العناصر الخاصة، مع امكانية عرض صورة التصنيف مع العنصر",
+          "id": "show_cats",
+          "format": "switch",
+          "value": false,
+          "selected": false,
+          "required": false
+        },
         {
           "id": "categories",
           "type": "items",
@@ -269,7 +371,6 @@
           "required": false,
           "conditions": [{ "id": "show_cats", "operation": "=", "value": true }]
         },
-
         {
           "id": "links",
           "type": "collection",
@@ -288,8 +389,27 @@
             { "links.icon": "sicon-calendar-date", "links.title": "حجوزات", "links.url__type": "offers_link" }
           ],
           "fields": [
-            { "type": "string", "icon": "sicon-format-text-alt", "label": "عنوان الرابط", "id": "links.icon", "format": "icon", "value": "sicon-store2", "required": false, "class": "form--inline" },
-            { "type": "string", "icon": "sicon-format-text-alt", "multilanguage": true, "id": "links.title", "format": "text", "required": false, "minLength": 2, "maxLength": 80, "placeholder": "أدخل عنوان للرابط هنا..." },
+            {
+              "type": "string",
+              "icon": "sicon-format-text-alt",
+              "label": "عنوان الرابط",
+              "id": "links.icon",
+              "format": "icon",
+              "value": "sicon-store2",
+              "required": false,
+              "class": "form--inline"
+            },
+            {
+              "type": "string",
+              "icon": "sicon-format-text-alt",
+              "multilanguage": true,
+              "id": "links.title",
+              "format": "text",
+              "required": false,
+              "minLength": 2,
+              "maxLength": 80,
+              "placeholder": "أدخل عنوان للرابط هنا..."
+            },
             {
               "type": "items",
               "icon": "sicon-link",
@@ -324,10 +444,47 @@
       "path": "home.slider-products-with-header",
       "image": "https://cdn.salla.sa/mQgZlG/3hhreht06MIPFWepyuz42rg3bHqGZIYmDVs1PjYc.png",
       "fields": [
-        { "type": "static", "format": "description", "id": "with-bg", "value": "<div style='margin: -24px -20px 20px'><img class='w-full' src='https://cdn.salla.network/images/themes/raed/preview-images/slider-products-with-bg.png?v=1.1'></div>" },
-        { "type": "string", "icon": "sicon-image", "label": "صورة الخلفية", "id": "background", "format": "image", "required": true, "value": "https://cdn.salla.sa/form-builder/D7bG3pgSit43TheOejBOZV7LIfG1y1Cj0hWLmgIh.jpg", "description": "* المقاس المناسب للصورة هو 1233×500 بكسل", "settings": { "height": 580, "width": 1400 } },
-        { "type": "string", "icon": "sicon-format-text-alt", "label": "عنوان رئيسي", "multilanguage": true, "id": "title", "format": "text", "required": false, "minLength": 0, "maxLength": "80", "placeholder": "يمكنك إضافة العنوان الرئيسي هنا..." },
-        { "type": "string", "icon": "sicon-typography", "label": "نص توضيحي", "multilanguage": true, "id": "description", "format": "textarea", "required": false, "minLength": 0, "maxLength": "256", "placeholder": "يمكنك إضافة وصف لهذا القسم هنا..." },
+        {
+          "type": "static",
+          "format": "description",
+          "id": "with-bg",
+          "value": "<div style='margin: -24px -20px 20px'><img class='w-full' src='https://cdn.salla.network/images/themes/raed/preview-images/slider-products-with-bg.png?v=1.1'></div>"
+        },
+        {
+          "type": "string",
+          "icon": "sicon-image",
+          "label": "صورة الخلفية",
+          "id": "background",
+          "format": "image",
+          "required": true,
+          "value": "https://cdn.salla.sa/form-builder/D7bG3pgSit43TheOejBOZV7LIfG1y1Cj0hWLmgIh.jpg",
+          "description": "* المقاس المناسب للصورة هو 1233×500 بكسل",
+          "settings": { "height": 580, "width": 1400 }
+        },
+        {
+          "type": "string",
+          "icon": "sicon-format-text-alt",
+          "label": "عنوان رئيسي",
+          "multilanguage": true,
+          "id": "title",
+          "format": "text",
+          "required": false,
+          "minLength": 0,
+          "maxLength": "80",
+          "placeholder": "يمكنك إضافة العنوان الرئيسي هنا..."
+        },
+        {
+          "type": "string",
+          "icon": "sicon-typography",
+          "label": "نص توضيحي",
+          "multilanguage": true,
+          "id": "description",
+          "format": "textarea",
+          "required": false,
+          "minLength": 0,
+          "maxLength": "256",
+          "placeholder": "يمكنك إضافة وصف لهذا القسم هنا..."
+        },
         {
           "type": "items",
           "icon": "sicon-keyboard_arrow_down",
@@ -381,7 +538,7 @@
       "fields": [
         {
           "id": "items",
-          "key": "0473eb46-c7f5-44c5-bd6f-b1fe716a5e64",
+          "key": "0473eb46-c7f5-44c5-bد6f-b1fe716a5e64",
           "type": "collection",
           "format": "collection",
           "label": "التقييمات",
@@ -390,8 +547,18 @@
           "minLength": 1,
           "maxLength": 30,
           "value": [
-            { "items.name": "ندى الحسيني", "items.avatar": "https://cdn.assets.salla.network/prod/stores/themes/default/assets/images/avatar_female.png", "items.stars": 5, "items.text": "وصلتني اليوم  وطلعت جميلة متحمسة أجربها ❤️" },
-            { "items.name": "خالد الأحمد", "items.avatar": "https://cdn.assets.salla.network/prod/stores/themes/default/assets/images/avatar_male.png", "items.stars": 5, "items.text": "اشتريت من هنا لعيالي وصراحة شئ لا يعلى عليه 👏" }
+            {
+              "items.name": "ندى الحسيني",
+              "items.avatar": "https://cdn.assets.salla.network/prod/stores/themes/default/assets/images/avatar_female.png",
+              "items.stars": 5,
+              "items.text": "وصلتني اليوم  وطلعت جميلة متحمسة أجربها ❤️"
+            },
+            {
+              "items.name": "خالد الأحمد",
+              "items.avatar": "https://cdn.assets.salla.network/prod/stores/themes/default/assets/images/avatar_male.png",
+              "items.stars": 5,
+              "items.text": "اشتريت من هنا لعيالي وصراحة شئ لا يعلى عليه 👏"
+            }
           ],
           "fields": [
             { "id": "items.name", "type": "string", "format": "text", "label": "اسم العميل", "icon": "sicon-format-text-alt" },
